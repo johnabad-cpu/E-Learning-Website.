@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}System Console{% endblock %}
+{% block auth_content %}
+<div class="auth-card">
+  <div class="auth-head">
+    <div class="logo-big">🔐</div>
+    <h1>System Console</h1>
+    <p class="muted small">Restricted access — Super Admin only</p>
+  </div>
+
+  <form method="POST" action="{{ url_for('super_admin_login') }}" class="form" data-no-ajax>
+    <label>Admin Username
+      <input type="text" name="username" required autocomplete="username">
+    </label>
+    <label>Password
+      <input type="password" name="password" required
+             autocomplete="current-password">
+    </label>
+    <button class="btn btn-red btn-block" type="submit">Access Console</button>
+  </form>
+
+  <div class="auth-foot">
+    <p class="muted small">🔒 Unauthorized access attempts are logged.</p>
+  </div>
+</div>
+{% endblock %}

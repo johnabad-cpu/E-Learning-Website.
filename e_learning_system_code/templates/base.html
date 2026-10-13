@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Dashboard{% endblock %} · E-Learning</title>
+<style>
+/* ================================================================
+   E-LEARNING — DARK SIDEBAR THEME
+   ================================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#1e1e1e;
+  --bg-2:#232326;
+  --card:#2d2d30;
+  --card-2:#333338;
+  --sidebar-bg:#111;
+  --sidebar-border:#222;
+  --border:#3a3a3a;
+  --text:#e0e0e0;
+  --text-dim:#999;
+  --muted:#cccccc;
+  --blue:#1877f2;
+  --blue-hover:#2d88ff;
+  --green:#22c55e;
+  --yellow:#eab308;
+  --red:#ef4444;
+  --purple:#a855f7;
+  --radius:8px;
+  --sidebar-w:220px;
+  --sidebar-col:75px;
+}
+
+html,body{height:100%}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-size:14px;
+  line-height:1.55;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3,h4{font-weight:600;letter-spacing:-.01em}
+h1{font-size:1.5rem;color:#fff}
+h2{font-size:1.15rem;margin-bottom:.35rem;color:#fff}
+h3{font-size:1rem;color:#fff}
+hr.sep{border:none;border-top:1px solid var(--border);margin:1rem 0}
+code{background:#151517;border:1px solid var(--border);padding:.1rem .4rem;border-radius:5px;font-size:.82em;color:#7cb3ff}
+.muted{color:var(--muted)}
+.small{font-size:.8rem}
+.center{text-align:center}
+.mt1{margin-top:.6rem}.mt2{margin-top:1.2rem}.mb1{margin-bottom:.6rem}.mb2{margin-bottom:1.2rem}
+
+/* ============ SIDEBAR ============ */
+.sidebar{
+  width:var(--sidebar-w);
+  background:var(--sidebar-bg);
+  position:fixed;top:0;left:0;
+  height:100vh;
+  height:100dvh;
+  transition:width .3s ease;
+  z-index:100;
+  border-right:1px solid var(--sidebar-border);
+  display:flex;
+  flex-direction:column;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+}
+.sidebar.collapsed{width:var(--sidebar-col)}
+
+/* ─── Firefox-only standard scrollbar for sidebar ─── */
+@supports not selector(::-webkit-scrollbar) {
+  .sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: #1877f2 #1a1a1a;
+  }
+}
+
+/* ─── WebKit scrollbar for sidebar (Edge/Chrome/Safari) ─── */
+.sidebar::-webkit-scrollbar{
+  width:5px;
+  height:5px;
+}
+.sidebar::-webkit-scrollbar-track{
+  background:#1a1a1a;
+  border-radius:3px;
+}
+.sidebar::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg, #1877f2, #0d5bcc);
+  border-radius:10px;
+  border:1px solid rgba(24,119,242,.4);
+}
+.sidebar::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg, #2d88ff, #1877f2);
+}
+.sidebar::-webkit-scrollbar-thumb:active{
+  background:#0d5bcc;
+}
+
+.sidebar-header{
+  padding:10px 12px;
+  border-bottom:1px solid var(--sidebar-border);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.sidebar-header h1{
+  font-size:17px;font-weight:700;
+  white-space:nowrap;overflow:hidden;
+  transition:opacity .2s;
+  color:#fff;margin:0;
+}
+.sidebar-header h1 span{color:var(--blue)}
+.sidebar.collapsed .sidebar-header h1{opacity:0;width:0}
+
+.toggle-btn{
+  background:transparent;border:none;cursor:pointer;
+  padding:10px;border-radius:6px;transition:.15s;
+  display:flex;align-items:center;justify-content:center;
+  color:#ccc;flex-shrink:0;
+}
+.toggle-btn:hover{background:var(--blue);color:#fff}
+
+.arrow-icon{width:25px;height:25px;transition:transform .3s ease;stroke:currentColor}
+.sidebar.collapsed .arrow-icon{transform:rotate(180deg)}
+
+/* ─── .box-links — main block (no scrollbar properties) ─── */
+.box-links{
+  list-style:none;padding:10px;margin:0;
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+
+/* ─── Firefox-only standard scrollbar ─── */
+@supports not selector(::-webkit-scrollbar) {
+  .box-links {
+    scrollbar-width: thin;
+    scrollbar-color: #1877f2 #1a1a1a;
+  }
+}
+
+/* ─── Edge / Chrome / Safari — webkit pseudo-elements ─── */
+.box-links::-webkit-scrollbar{
+  width:5px;
+  height:5px;
+}
+.box-links::-webkit-scrollbar-track{
+  background:#1a1a1a;
+  border-radius:3px;
+}
+.box-links::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg, #1877f2, #0d5bcc);
+  border-radius:10px;
+  border:1px solid rgba(24,119,242,.4);
+}
+.box-links::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg, #2d88ff, #1877f2);
+}
+.box-links::-webkit-scrollbar-thumb:active{
+  background:#0d5bcc;
+}
+/* ─── Nav wrapper — must be a flex item that can shrink ─── */
+.sidebar > nav{
+  flex:1 1 auto;
+  min-height:0;
+  display:flex;
+  overflow:hidden;
+}
+
+/* ─── List items ─── */
+.box-links li{margin-bottom:2px}
+
+.box-links li a.adminnav,
+.box-links li a.logout{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 13px;
+  color:#ccc;text-decoration:none;
+  border-radius:8px;
+  transition:.15s;
+  white-space:nowrap;cursor:pointer;
+  font-size:13.5px;font-weight:500;
+}
+.box-links li a.adminnav:hover,
+.box-links li a.logout:hover{background:var(--blue);color:#fff;text-decoration:none}
+
+.box-links li a.adminnav.active{
+  background:var(--blue);color:#fff;font-weight:600;
+}
+
+.icon{
+  width:25px;height:25px;flex-shrink:0;
+  stroke:currentColor;fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+.sidebar.collapsed .box-links li a.adminnav span,
+.sidebar.collapsed .box-links li a.logout span{display:none}
+
+.sidebar-user{
+  margin:8px;padding:10px;
+  border-radius:8px;
+  background:#1a1a1a;
+  border:1px solid #262626;
+  display:flex;align-items:center;gap:10px;
+  flex-shrink:0;
+  overflow:hidden;
+}
+.sidebar-user .avatar-sm{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;color:#fff;font-size:.85rem;flex-shrink:0;
+}
+.sidebar-user .info{overflow:hidden;white-space:nowrap}
+.sidebar-user .info b{color:#fff;font-size:.85rem;display:block}
+.sidebar-user .info small{color:var(--text-dim);font-size:.72rem}
+.sidebar.collapsed .sidebar-user .info{display:none}
+
+/* ============ MAIN PANEL ============ */
+.parent-panel{
+  margin-left:var(--sidebar-w);
+  transition:margin-left .3s ease;
+  min-height:100vh;
+  padding:20px 24px 40px;
+}
+.sidebar.collapsed ~ .parent-panel{margin-left:var(--sidebar-col)}
+
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--border);
+}
+.topbar-left h1{font-size:1.4rem;color:#fff;margin:0}
+.topbar-left .sub{color:var(--text-dim);font-size:.85rem;margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* ============ LAYOUT ============ */
+.grid{display:grid;gap:14px}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+
+/* ============ CARDS ============ */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px 18px;
+}
+.card-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.card-title h2,.card-title h3{margin:0}
+
+.stat{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  transition:.15s;
+}
+.stat:hover{border-color:var(--blue);transform:translateY(-2px)}
+.stat.clickable{cursor:pointer}
+.stat .label{
+  font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--text-dim);font-weight:600;
+}
+.stat .value{
+  font-size:1.6rem;font-weight:700;margin-top:4px;
+  color:var(--blue-hover);
+}
+
+/* ============ BUTTONS ============ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.4rem;
+  border:none;border-radius:6px;padding:9px 16px;
+  font-size:.86rem;font-weight:600;cursor:pointer;
+  font-family:inherit;
+  transition:.15s;color:#fff;white-space:nowrap;text-decoration:none;
+}
+.btn:hover{transform:translateY(-1px);text-decoration:none}
+.btn-blue{background:var(--blue)}
+.btn-blue:hover{background:var(--blue-hover);box-shadow:0 0 12px rgba(24,119,242,.5)}
+.btn-green{background:var(--green)}
+.btn-green:hover{filter:brightness(1.1)}
+.btn-yellow{background:var(--yellow);color:#111}
+.btn-yellow:hover{filter:brightness(1.1)}
+.btn-red{background:var(--red)}
+.btn-red:hover{filter:brightness(1.1)}
+.btn-purple{background:var(--purple)}
+.btn-purple:hover{filter:brightness(1.1)}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-ghost:hover{background:#333;border-color:#555}
+.btn-sm{padding:5px 10px;font-size:.76rem;border-radius:5px}
+.btn-block{width:100%}
+.icon-btn{background:transparent;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;line-height:1;padding:0 4px}
+.icon-btn:hover{color:var(--red)}
+
+/* ============ BADGES ============ */
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.68rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.badge-blue{background:rgba(24,119,242,.18);color:#7cb3ff;border:1px solid rgba(24,119,242,.4)}
+.badge-green{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.35)}
+.badge-yellow{background:rgba(234,179,8,.15);color:#fde68a;border:1px solid rgba(234,179,8,.35)}
+.badge-red{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.35)}
+.badge-purple{background:rgba(168,85,247,.15);color:#d8b4fe;border:1px solid rgba(168,85,247,.35)}
+.badge-gray{background:rgba(148,163,184,.12);color:#cbd5e1;border:1px solid rgba(148,163,184,.3)}
+
+.medal{display:inline-block;padding:2px 8px;border-radius:6px;font-size:.7rem;font-weight:700}
+.medal-Gold{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#422006}
+.medal-Silver{background:linear-gradient(135deg,#e2e8f0,#94a3b8);color:#1e293b}
+.medal-Bronze{background:linear-gradient(135deg,#d97706,#92400e);color:#fff7ed}
+
+/* ============ TABLES ============ */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:520px}
+thead{background:#232326}
+th{padding:10px 12px;text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);font-weight:700;border-bottom:1px solid var(--border)}
+td{padding:9px 12px;border-bottom:1px solid rgba(58,58,58,.5)}
+tbody tr:hover{background:rgba(24,119,242,.06)}
+tbody tr:last-child td{border-bottom:none}
+.empty{padding:20px;text-align:center;color:var(--text-dim);font-style:italic}
+
+/* ============ FORMS ============ */
+.form{display:flex;flex-direction:column;gap:12px}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+input,select,textarea{
+  width:100%;padding:10px 12px;border-radius:6px;
+  border:1px solid var(--border);background:#151517;color:var(--text);
+  font-size:.9rem;font-family:inherit;outline:none;transition:.15s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(24,119,242,.18)}
+textarea{resize:vertical;min-height:90px}
+input[type=checkbox]{width:auto}
+.row-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row-inline > *{flex:1;min-width:110px}
+
+/* ============ FLASH ============ */
+.flash-wrap{margin-bottom:14px;display:flex;flex-direction:column;gap:8px}
+.flash{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:11px 16px;border-radius:8px;font-weight:500;font-size:.86rem;
+  animation:slideIn .3s ease;
+}
+@keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.flash-success{background:rgba(34,197,94,.13);border:1px solid rgba(34,197,94,.4);color:#bbf7d0}
+.flash-error{background:rgba(239,68,68,.13);border:1px solid rgba(239,68,68,.4);color:#fecaca}
+.flash-close{background:none;border:none;color:inherit;font-size:1.2rem;cursor:pointer;line-height:1;opacity:.7}
+.flash-close:hover{opacity:1}
+
+/* ============ MODALS ============ */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  display:none;align-items:flex-start;justify-content:center;
+  z-index:1000;padding:24px 16px;overflow-y:auto;
+  backdrop-filter:blur(4px);
+}
+.modal-backdrop.active{display:flex}
+.modal{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  width:100%;max-width:520px;padding:20px 22px;
+  box-shadow:0 20px 50px rgba(0,0,0,.7);
+  animation:pop .18s ease;margin:auto 0;
+}
+.modal-lg{max-width:720px}
+.modal-sm{max-width:420px}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.modal-head h3{margin:0;color:#fff}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+
+/* ============ CONTENT SECTIONS ============ */
+.content-section{display:none;animation:fadeIn .3s ease}
+.content-section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ============ LEADERBOARD ============ */
+.lb-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;
+  border:1px solid var(--border);background:#242428;margin-bottom:6px}
+.lb-row.top1{background:linear-gradient(90deg,rgba(251,191,36,.15),rgba(45,45,48,.4));border-color:rgba(251,191,36,.4)}
+.lb-row.top2{background:linear-gradient(90deg,rgba(226,232,240,.12),rgba(45,45,48,.4));border-color:rgba(226,232,240,.3)}
+.lb-row.top3{background:linear-gradient(90deg,rgba(217,119,6,.15),rgba(45,45,48,.4));border-color:rgba(217,119,6,.4)}
+.lb-rank{font-weight:800;font-size:.95rem;width:2rem;text-align:center;color:var(--text-dim)}
+.lb-name{flex:1;font-weight:600}
+.lb-pts{font-weight:700;color:#86efac;font-variant-numeric:tabular-nums}
+
+/* ============ STARS ============ */
+.stars{color:#fbbf24;letter-spacing:.05em}
+.star-pick{display:flex;gap:4px;flex-direction:row-reverse;justify-content:flex-end}
+.star-pick label{cursor:pointer;font-size:1.5rem;color:#3a3a3a;transition:color .12s}
+.star-pick input{display:none}
+.star-pick input:checked ~ label,
+.star-pick label:hover,
+.star-pick label:hover ~ label{color:#fbbf24}
+
+/* ============ TIMER / STUDY ============ */
+.study-text{white-space:pre-wrap;background:#151517;border:1px solid var(--border);
+  border-radius:8px;padding:14px 16px;line-height:1.7;max-height:240px;overflow-y:auto}
+.timer-box{text-align:center;margin:16px 0;padding:16px;border-radius:10px;
+  background:rgba(24,119,242,.08);border:1px solid rgba(24,119,242,.3)}
+.timer-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);font-weight:700}
+.timer{font-size:2.4rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--blue-hover)}
+.timer.done{color:#4ade80}
+.quiz-locked{text-align:center;padding:12px;border-radius:8px;
+  background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);color:#fde68a;font-weight:600;font-size:.85rem}
+.quiz-unlocked{border:1px solid rgba(34,197,94,.4);background:rgba(34,197,94,.06);
+  border-radius:8px;padding:14px;animation:pop .25s ease}
+
+/* ============ CONTAINER / PAGE HEAD ============ */
+.container{width:100%}
+.page-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:12px;flex-wrap:wrap;margin-bottom:18px;
+  padding-bottom:14px;border-bottom:1px solid var(--border);
+}
+.page-head h1{font-size:1.4rem;color:#fff;margin:0}
+.page-head .sub{color:var(--text-dim);font-size:.85rem;margin-top:2px}
+
+/* ============ NOTIFICATIONS ============ */
+.notif-bell{
+  background:transparent;border:none;position:relative;
+  color:#ccc;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.notif-bell svg{
+  width:27px;
+  height:27px;
+  cursor:pointer;
+  transition:.15s;
+}
+.notif-bell svg:hover{stroke:var(--blue);color:#fff;filter: drop-shadow(0px 0px 4px var(--blue-hover));}
+.notif-dot{
+  position:absolute;top:4px;right:4px;
+  width:10px;height:10px;background:#ef4444;border-radius:50%;
+  border:2px solid var(--sidebar-bg);
+  animation:pulse 1.5s infinite;
+}
+.notif-dot.hidden{display:none}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(239,68,68,.7)}
+  70%{box-shadow:0 0 0 8px rgba(239,68,68,0)}
+  100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}
+}
+.notif-panel{
+  position:fixed;top:70px;right:20px;width:380px;max-width:calc(100vw - 40px);
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  box-shadow:0 20px 50px rgba(0,0,0,.7);z-index:200;
+  display:none;max-height:70vh;overflow:hidden;flex-direction:column;
+}
+.notif-panel.active{display:flex}
+.notif-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;border-bottom:1px solid var(--border);
+}
+
+.nothead{
+  display: flex;
+  align-items: center;
+}
+.notif-list{overflow-y:auto;flex:1}
+.notif-item{
+  padding:12px 16px;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:.15s;
+}
+.notif-item:hover{background:rgba(24,119,242,.08)}
+.notif-item.unread{background:rgba(24,119,242,.05);
+  border-left:3px solid var(--blue);}
+.notif-item b{color:#fff;display:block;margin-bottom:2px;font-size:.85rem}
+.notif-item p{color:var(--muted);font-size:.78rem;margin:0}
+.notif-item small{color:var(--text-dim);font-size:.7rem}
+
+/* ─── Topbar avatar (circle beside bell) ─── */
+.topbar-avatar{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:linear-gradient(135deg, var(--blue), var(--purple));
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  color:#fff;
+  font-size:.95rem;
+  cursor:pointer;
+  border:2px solid var(--border);
+  transition:.15s ease;
+  text-decoration:none;
+  flex-shrink:0;
+}
+.topbar-avatar:hover{
+  border-color:var(--blue);
+  transform:scale(1.06);
+  box-shadow:0 0 12px rgba(24,119,242,.45);
+  text-decoration:none;
+}
+
+/* ============ MISC ============ */
+.pill-row{display:flex;gap:6px;flex-wrap:wrap}
+.tag{display:inline-block;background:#151517;border:1px solid var(--border);
+  border-radius:999px;padding:2px 10px;font-size:.72rem;color:var(--text-dim)}
+.avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:1rem;color:#fff;background:linear-gradient(135deg,var(--blue),var(--purple));flex-shrink:0}
+
+/* ============ AUTH LAYOUT ============ */
+.auth-root{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:24px 16px;
+  overflow-y:auto;
+  background:
+    radial-gradient(900px 500px at 20% 0%, #1a2b45 0%, transparent 55%),
+    radial-gradient(700px 400px at 80% 100%, #2a1c45 0%, transparent 55%),
+    var(--bg);
+}
+.auth-wrap{
+  width:100%;
+  max-width:440px;
+  margin:auto 0;
+}
+.auth-card{
+  width:100%;background:var(--card);
+  border:1px solid var(--border);border-radius:12px;
+  padding:32px 28px;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+}
+.auth-head{text-align:center;margin-bottom:22px}
+.logo-big{
+  width: 70px; 
+  height: 70px;
+  
+  
+
+}
+
+.auth-head h1{font-size:1.25rem;margin-top:8px;color:#fff}
+.auth-foot{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);text-align:center;font-size:.86rem}
+.demo-box{margin-top:12px;background:#151517;border:1px dashed var(--border);
+  border-radius:8px;padding:12px 14px;font-size:.78rem;text-align:left;color:var(--muted);line-height:1.7}
+.demo-box b{color:#fff;display:block;margin-bottom:4px}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:768px){
+  .sidebar{width:var(--sidebar-col)}
+
+  /* Compact header */
+  .sidebar-header{padding:10px 8px;justify-content:center}
+  .sidebar-header h1{display:none}
+  .toggle-btn{padding:8px}
+
+  /* Compact nav items — fit more without scrolling */
+  .box-links{padding:6px}
+  .box-links li{margin-bottom:0}
+  .box-links li a.adminnav,
+  .box-links li a.logout{
+    padding:9px;
+    justify-content:center;
+    gap:0;
+  }
+  .box-links li a.adminnav span,
+  .box-links li a.logout span{display:none}
+  .icon{width:22px;height:22px}
+
+  /* Main panel */
+  .parent-panel{margin-left:var(--sidebar-col);padding:16px}
+  .topbar-left h1{font-size:1.15rem}
+  .timer{font-size:2rem}
+  .modal{padding:16px}
+}
+</style>
+</head>
+<body>
+
+{% if current_user_obj %}
+{# ==================== SIDEBAR LAYOUT ==================== #}
+<div class="admin-layout">
+  <aside class="sidebar" id="sidebarPanel">
+    <div class="sidebar-header">
+      <h1><span>Edu</span>Portal</h1>
+      <button id="toggleBtn" class="toggle-btn" title="Toggle Sidebar" type="button">
+        <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 15v3.586a1 1 0 0 1-1.707.707l-6.586-6.586a1 1 0 0 1 0-1.414l6.586-6.586a1 1 0 0 1 1.707.707v3.586h3v6h-3"/>
+          <path d="M21 15v-6"/>
+          <path d="M18 15v-6"/>
+        </svg>
+      </button>
+    </div>
+
+    <nav>
+      <ul class="box-links">
+        {% block nav_items %}{% endblock %}
+        <li>
+          <a class="logout" href="{{ url_for('logout') }}">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M14 8v-2a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2"/>
+              <path d="M9 12h12l-3-3"/>
+              <path d="M18 15l3-3"/>
+            </svg>
+            <span>Logout</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <div class="parent-panel">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+        <div class="sub">{% block page_sub %}{% endblock %}</div>
+      </div>
+      <div class="topbar-right">
+        <div class="global-search" style="position:relative;">
+          <input type="text" id="globalSearch" placeholder=" Search users..."
+                 autocomplete="off"
+                 style="min-width:220px;padding:.5rem .8rem;">
+          <div id="globalSearchDropdown"
+               style="display:none;position:absolute;top:100%;right:0;
+                      width:320px;margin-top:.35rem;background:var(--card);
+                      border:1px solid var(--border);border-radius:8px;
+                      box-shadow:0 15px 30px rgba(0,0,0,.5);
+                      max-height:400px;overflow-y:auto;z-index:70;">
+          </div>
+        </div>
+
+        <button id="notifBell" class="notif-bell" type="button" >
+          <svg xmlns="http://www.w3.org/2000/svg"   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-bell"><title>Notifications</title><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /><path d="M9 17v1a3 3 0 0 0 6 0v-1" /></svg>
+          <span id="notifDot" class="notif-dot{% if not unread_notifications %} hidden{% endif %}"></span>
+        </button>
+
+        {# ─── User Avatar (katabi ng bell) ─── #}
+        {% if current_user_obj %}
+        <a class="topbar-avatar"
+           href="{{ url_for('profile', username=current_username) }}"
+           title="{{ current_username }} · {{ current_role }}">
+          {{ current_username[0]|upper if current_username else '?' }}
+        </a>
+        {% endif %}
+
+        <span class="badge badge-blue">{{ current_role }}</span>
+      </div>
+    </div>
+
+    <div id="notifPanel" class="notif-panel">
+      <div class="notif-head">
+        <div class="nothead"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-bell"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /><path d="M9 17v1a3 3 0 0 0 6 0v-1" /></svg><b>Notifications</b></div>
+        <div style="display:flex;gap:.5rem;">
+          <button type="button" class="btn btn-ghost btn-sm" id="markAllReadBtn">Mark all read</button>
+          <button type="button" class="icon-btn" id="closeNotifBtn">×</button>
+        </div>
+      </div>
+      <div id="notifList" class="notif-list">
+        <p class="empty">Loading…</p>
+      </div>
+    </div>
+
+    <div class="flash-wrap">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for cat, msg in messages %}
+            <div class="flash flash-{{ 'success' if cat == 'success' else 'error' }}">
+              <span>{{ msg }}</span>
+              <button class="flash-close" type="button" onclick="this.parentElement.remove()">×</button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    {% block content %}{% endblock %}
+  </div>
+</div>
+
+{% else %}
+{# ==================== AUTH LAYOUT ==================== #}
+<div class="auth-root">
+  <div class="auth-wrap">
+    <div class="flash-wrap">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for cat, msg in messages %}
+            <div class="flash flash-{{ 'success' if cat == 'success' else 'error' }}">
+              <span>{{ msg }}</span>
+              <button class="flash-close" type="button" onclick="this.parentElement.remove()">×</button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+    {% block auth_content %}{% endblock %}
+  </div>
+</div>
+{% endif %}
+
+<!-- ================= GLOBAL CONFIRM MODAL ================= -->
+<div class="modal-backdrop" id="confirmModal">
+  <div class="modal modal-sm">
+    <div class="modal-head">
+      <h3>Confirm Action</h3>
+      <button class="icon-btn" type="button" data-close>×</button>
+    </div>
+    <p id="confirmMessage" class="muted">Are you sure you want to continue?</p>
+    <form method="POST" id="confirmForm">
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-red">Yes, Continue</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- ================= CHANGE PASSWORD MODAL ================= -->
+{% if current_user_obj and current_role in ('Teacher', 'Student') %}
+<div class="modal-backdrop" id="changePasswordModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🔒 Change Password</h3>
+      <button class="icon-btn" type="button" data-close>×</button>
+    </div>
+    <p class="muted small mb1">
+      Update your password regularly to keep your account secure.
+    </p>
+
+    {# In-modal feedback boxes (hidden by default) #}
+    <div id="cpErrorBox"
+         style="display:none;background:rgba(239,68,68,.13);
+                border:1px solid rgba(239,68,68,.45);color:#fecaca;
+                padding:10px 14px;border-radius:8px;font-size:.86rem;
+                font-weight:500;margin-bottom:12px;">
+    </div>
+    <div id="cpSuccessBox"
+         style="display:none;background:rgba(34,197,94,.13);
+                border:1px solid rgba(34,197,94,.45);color:#bbf7d0;
+                padding:10px 14px;border-radius:8px;font-size:.86rem;
+                font-weight:500;margin-bottom:12px;">
+    </div>
+
+    <form method="POST" id="changePasswordForm"
+          action="{{ url_for('change_password') }}"
+          class="form" data-no-ajax>
+      <label>Current Password *
+        <input type="password" name="current" required
+               autocomplete="current-password"
+               placeholder="Enter your current password">
+      </label>
+      <label>New Password *
+        <input type="password" name="new" required minlength="8"
+               autocomplete="new-password"
+               placeholder="At least 8 characters">
+      </label>
+      <label>Confirm New Password *
+        <input type="password" name="confirm" required minlength="8"
+               autocomplete="new-password"
+               placeholder="Re-type new password">
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-yellow" id="cpSubmitBtn">
+          🔒 Update Password
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+<script>
+/* ================================================================
+   GLOBAL JAVASCRIPT
+   ================================================================ */
+(function () {
+  'use strict';
+
+  /* ---------- Sidebar collapse ---------- */
+  var sidebar = document.getElementById('sidebarPanel');
+  var toggleBtn = document.getElementById('toggleBtn');
+
+  if (sidebar && toggleBtn) {
+    try {
+      if (sessionStorage.getItem('sidebar_collapsed') === '1') {
+        sidebar.classList.add('collapsed');
+      }
+    } catch (e) { /* ignore */ }
+
+    toggleBtn.addEventListener('click', function () {
+      sidebar.classList.toggle('collapsed');
+      try {
+        sessionStorage.setItem('sidebar_collapsed',
+          sidebar.classList.contains('collapsed') ? '1' : '0');
+      } catch (e) { /* ignore */ }
+    });
+  }
+
+  /* ---------- Auto-scroll sidebar to active nav item ----------
+     Kapag may nav item na naka-active (halimbawa mula sa notification link,
+     sessionStorage restore, o manual click), siguraduhing visible ito sa
+     loob ng scrollable sidebar. */
+  function scrollActiveNavIntoView() {
+    var boxLinks = document.querySelector('.box-links');
+    if (!boxLinks) return;
+
+    var activeNav = boxLinks.querySelector('.adminnav.active');
+    if (!activeNav) return;
+
+    /* Check if the active item is fully visible sa loob ng .box-links */
+    var boxRect = boxLinks.getBoundingClientRect();
+    var navRect = activeNav.getBoundingClientRect();
+
+    var isAboveView = navRect.top < boxRect.top;
+    var isBelowView = navRect.bottom > boxRect.bottom;
+
+    if (isAboveView || isBelowView) {
+      /* Smooth scroll para nasa gitna yung active item */
+      activeNav.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  }
+
+  /* Expose globally so other code (hashchange, restore-on-load) can call it */
+  window.scrollActiveNavIntoView = scrollActiveNavIntoView;
+
+  /* ---------- Restore pending flash after navigation ---------- */
+  document.addEventListener('DOMContentLoaded', function () {
+    try {
+      var pendingFlash = sessionStorage.getItem('pending_flash_html');
+      if (pendingFlash) {
+        sessionStorage.removeItem('pending_flash_html');
+        var flashWrap = document.querySelector('.flash-wrap');
+        if (flashWrap) {
+          flashWrap.innerHTML = pendingFlash;
+          var f = flashWrap.querySelector('.flash-success');
+          if (f) {
+            setTimeout(function () {
+              if (f.parentElement) f.remove();
+            }, 6000);
+          }
+        }
+      }
+    } catch (e) { /* ignore */ }
+  });
+
+  /* ---------- Modal engine ---------- */
+  window.openModal = function (id) {
+    var m = document.getElementById(id);
+    if (m) m.classList.add('active');
+  };
+  window.closeModal = function (id) {
+    var m = document.getElementById(id);
+    if (m) m.classList.remove('active');
+  };
+
+  document.addEventListener('click', function (e) {
+    var opener = e.target.closest('[data-open]');
+    if (opener) {
+      e.preventDefault();
+      var modalId = opener.dataset.open;
+      // ─── Reset Change Password modal feedback & fields ───
+      if (modalId === 'changePasswordModal') {
+        var errBox = document.getElementById('cpErrorBox');
+        var okBox = document.getElementById('cpSuccessBox');
+        var cpF = document.getElementById('changePasswordForm');
+        if (errBox) errBox.style.display = 'none';
+        if (okBox) okBox.style.display = 'none';
+        if (cpF) cpF.reset();
+      }
+      window.openModal(modalId);
+      return;
+    }
+    var closer = e.target.closest('[data-close]');
+    if (closer) {
+      e.preventDefault();
+      var m = closer.closest('.modal-backdrop');
+      if (m) m.classList.remove('active');
+      return;
+    }
+    if (e.target.classList.contains('modal-backdrop')) {
+      e.target.classList.remove('active');
+    }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-backdrop.active').forEach(function (m) {
+        m.classList.remove('active');
+      });
+    }
+  });
+
+
+  /* ---------- Change Password form (AJAX, stays inside modal) ---------- */
+  var cpForm = document.getElementById('changePasswordForm');
+  if (cpForm) {
+    cpForm.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      var errBox = document.getElementById('cpErrorBox');
+      var okBox = document.getElementById('cpSuccessBox');
+      var submitBtn = document.getElementById('cpSubmitBtn');
+
+      // Hide previous feedback
+      errBox.style.display = 'none';
+      okBox.style.display = 'none';
+
+      // Disable button while requesting
+      var originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Updating…';
+
+      var fd = new FormData(cpForm);
+      fd.append('_ajax', '1');
+
+      fetch(cpForm.action, {
+        method: 'POST',
+        body: fd,
+        credentials: 'same-origin',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      })
+      .then(function (r) {
+        return r.json().then(function (j) { return { status: r.status, json: j }; });
+      })
+      .then(function (res) {
+        var data = res.json || {};
+        if (res.status >= 200 && res.status < 300 && data.ok) {
+          // ── SUCCESS ──
+          okBox.textContent = '✅ ' + (data.message || 'Password updated successfully!');
+          okBox.style.display = 'block';
+
+          // Clear password fields (they are sensitive)
+          cpForm.reset();
+
+          // Close modal after 1.5 seconds
+          setTimeout(function () {
+            window.closeModal('changePasswordModal');
+          }, 1500);
+        } else {
+          // ── ERROR: keep modal open, keep the typed values ──
+          errBox.textContent = '❌ ' + (data.error || 'Something went wrong.');
+          errBox.style.display = 'block';
+
+          // Only clear the CURRENT password field so user can retype it.
+          // Keep 'new' and 'confirm' as they are.
+          var curField = cpForm.querySelector('input[name="current"]');
+          if (curField) curField.value = '';
+          var newField = cpForm.querySelector('input[name="new"]');
+          if (newField && newField.focus) {
+            // Focus back to current since it likely needs correcting
+            if (curField && curField.focus) curField.focus();
+          }
+        }
+      })
+      .catch(function (err) {
+        errBox.textContent = '❌ Network error: ' + err.message;
+        errBox.style.display = 'block';
+      })
+      .finally(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      });
+    }, true);   // capture = runs before the global document listener
+  }
+
+  /* ---------- Confirm dialog ---------- */
+  window.confirmAction = function (action, message) {
+    var form = document.getElementById('confirmForm');
+    var msg = document.getElementById('confirmMessage');
+    if (form) form.action = action;
+    if (msg) msg.textContent = message || 'Are you sure you want to continue?';
+    window.openModal('confirmModal');
+  };
+
+  /* ---------- Sidebar section switching ---------- */
+  document.addEventListener('click', function (e) {
+    var nav = e.target.closest('.adminnav[data-section]');
+    if (!nav) return;
+    e.preventDefault();
+
+    var group = nav.closest('.box-links');
+    if (group) {
+      group.querySelectorAll('.adminnav').forEach(function (x) {
+        x.classList.remove('active');
+      });
+    }
+    nav.classList.add('active');
+
+    var target = nav.dataset.section;
+    document.querySelectorAll('.content-section').forEach(function (sec) {
+      sec.classList.toggle('active', sec.dataset.section === target);
+    });
+
+    try { sessionStorage.setItem('ui_active_section', target); } catch (err) { /* ignore */ }
+
+    /* ─── Update URL hash so refresh keeps this section ─── */
+    try {
+      if (history.replaceState) {
+        history.replaceState(null, '', '#' + target);
+      }
+    } catch (err) { /* ignore */ }
+
+    /* ─── Auto-scroll sidebar so clicked item is visible ─── */
+    scrollActiveNavIntoView();
+
+    window.scrollTo(0, 0);
+  });
+
+    /* ---------- Listen for hash changes (fix for notification clicks) ----------
+     Kapag ang notification link ay parehas ng path (e.g. /teacher#connect)
+     pero may bagong hash, hindi nag-reload ang browser. Ang listener na ito
+     ang mag-ti-trigger ng section switching kahit walang page reload. */
+  window.addEventListener('hashchange', function () {
+    var hashTarget = (window.location.hash || '').replace('#', '').trim();
+    if (!hashTarget) return;
+
+    var nav = document.querySelector('.adminnav[data-section="' + hashTarget + '"]');
+    if (!nav) return;
+
+    // Update sidebar active state
+    document.querySelectorAll('.adminnav').forEach(function (x) {
+      x.classList.remove('active');
+    });
+    nav.classList.add('active');
+
+    // Switch visible section
+    document.querySelectorAll('.content-section').forEach(function (sec) {
+      sec.classList.toggle('active', sec.dataset.section === hashTarget);
+    });
+
+    // Remember for future visits
+    try { sessionStorage.setItem('ui_active_section', hashTarget); } catch (e) { /* ignore */ }
+
+    // Close notification panel if open
+    var np = document.getElementById('notifPanel');
+    if (np) np.classList.remove('active');
+
+    // ─── Auto-scroll sidebar so active item is visible ───
+    scrollActiveNavIntoView();
+
+    // Scroll to top
+    window.scrollTo(0, 0);
+  });
+
+  /* ---------- Restore active section on load (URL hash > sessionStorage) ---------- */
+  document.addEventListener('DOMContentLoaded', function () {
+    var hashTarget = (window.location.hash || '').replace('#', '').trim();
+    var savedSection = null;
+    try { savedSection = sessionStorage.getItem('ui_active_section'); } catch (e) { /* ignore */ }
+
+    var targetSection = null;
+
+    // ─── URL hash takes priority (from notification links like /teacher#connect) ───
+    if (hashTarget) {
+      var hashNav = document.querySelector('.adminnav[data-section="' + hashTarget + '"]');
+      if (hashNav) targetSection = hashTarget;
+    }
+
+    // ─── Fall back to sessionStorage ───
+    if (!targetSection && savedSection) {
+      var savedNav = document.querySelector('.adminnav[data-section="' + savedSection + '"]');
+      if (savedNav) targetSection = savedSection;
+    }
+
+    if (targetSection) {
+      var nav = document.querySelector('.adminnav[data-section="' + targetSection + '"]');
+      if (nav) {
+        document.querySelectorAll('.adminnav').forEach(function (x) { x.classList.remove('active'); });
+        nav.classList.add('active');
+        document.querySelectorAll('.content-section').forEach(function (sec) {
+          sec.classList.toggle('active', sec.dataset.section === targetSection);
+        });
+        try { sessionStorage.setItem('ui_active_section', targetSection); } catch (e) { /* ignore */ }
+      }
+    } else {
+      var activeExists = document.querySelector('.content-section.active');
+      if (!activeExists) {
+        var first = document.querySelector('.content-section');
+        if (first) first.classList.add('active');
+        var firstNav = document.querySelector('.adminnav[data-section]');
+        if (firstNav) firstNav.classList.add('active');
+      }
+    }
+
+    /* ─── After restoring active section, scroll sidebar to show it ─── */
+    /* Small delay so layout has time to compute */
+    setTimeout(scrollActiveNavIntoView, 100);
+  });
+
+  /* ---------- Loading overlay ---------- */
+  function showLoadingOverlay(message) {
+    var el = document.getElementById('globalLoadingOverlay');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'globalLoadingOverlay';
+      el.style.cssText = [
+        'position:fixed', 'inset:0',
+        'background:rgba(0,0,0,.55)',
+        'backdrop-filter:blur(3px)',
+        'display:flex', 'flex-direction:column',
+        'align-items:center', 'justify-content:center',
+        'gap:14px', 'z-index:9999',
+        'opacity:0', 'transition:opacity .2s ease',
+        'pointer-events:auto'
+      ].join(';');
+      el.innerHTML =
+        '<div style="' +
+          'width:52px;height:52px;' +
+          'border:4px solid rgba(255,255,255,.15);' +
+          'border-top-color:#1877f2;' +
+          'border-radius:50%;' +
+          'animation:spin .8s linear infinite;' +
+        '"></div>' +
+        '<div id="globalLoadingText" style="' +
+          'color:#fff;font-weight:600;font-size:.95rem;' +
+          'letter-spacing:.02em;' +
+        '">Please wait...</div>';
+      document.body.appendChild(el);
+    }
+    var txt = document.getElementById('globalLoadingText');
+    if (txt) txt.textContent = message || 'Please wait...';
+    requestAnimationFrame(function () {
+      el.style.opacity = '1';
+    });
+  }
+
+  function hideLoadingOverlay() {
+    var el = document.getElementById('globalLoadingOverlay');
+    if (!el) return;
+    el.style.opacity = '0';
+    setTimeout(function () {
+      if (el.parentNode) el.parentNode.removeChild(el);
+    }, 220);
+  }
+
+  if (!document.getElementById('spinKeyframes')) {
+    var styleEl = document.createElement('style');
+    styleEl.id = 'spinKeyframes';
+    styleEl.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+    document.head.appendChild(styleEl);
+  }
+
+  function actionLabel(form) {
+    var action = (form.action || '').toLowerCase();
+    if (action.indexOf('/approve') !== -1) return 'Approving…';
+    if (action.indexOf('/reject') !== -1) return 'Rejecting…';
+    if (action.indexOf('/delete') !== -1) return 'Deleting…';
+    if (action.indexOf('/update') !== -1) return 'Updating…';
+    if (action.indexOf('/create') !== -1) return 'Creating…';
+    if (action.indexOf('/submit') !== -1) return 'Submitting…';
+    if (action.indexOf('/mark') !== -1) return 'Saving…';
+    if (action.indexOf('/login') !== -1) return 'Logging in…';
+    if (action.indexOf('/signup') !== -1) return 'Submitting…';
+    return 'Saving…';
+  }
+
+  /* ---------- AJAX form handling ---------- */
+  document.addEventListener('submit', function (ev) {
+    var form = ev.target;
+    if (!form.action || !form.method) return;
+    if (form.method.toLowerCase() !== 'post') return;
+    if (form.hasAttribute('data-no-ajax')) return;
+    if (form.id === 'confirmForm') return;
+
+    ev.preventDefault();
+
+    var currentUrl = window.location.href.split('#')[0];
+    var submitBtn = form.querySelector('button[type="submit"]');
+    var originalText = submitBtn ? submitBtn.textContent : '';
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.dataset.originalText = originalText;
+      submitBtn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:6px;">' +
+        '<span style="width:12px;height:12px;border:2px solid rgba(255,255,255,.4);' +
+        'border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;' +
+        'display:inline-block;"></span>' +
+        'Working…</span>';
+    }
+
+    showLoadingOverlay(actionLabel(form));
+
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      credentials: 'same-origin',
+      redirect: 'follow'
+    })
+    .then(function (r) {
+      return r.text().then(function (html) {
+        return { html: html, finalUrl: r.url };
+      });
+    })
+    .then(function (result) {
+      var newUrl = (result.finalUrl || '').split('#')[0];
+      if (newUrl && newUrl !== currentUrl) {
+        var tempDoc = new DOMParser().parseFromString(result.html, 'text/html');
+        var tempFlash = tempDoc.querySelector('.flash-wrap');
+        if (tempFlash && tempFlash.innerHTML.trim()) {
+          try {
+            sessionStorage.setItem('pending_flash_html', tempFlash.innerHTML);
+          } catch (e) { /* ignore */ }
+        }
+        window.location.href = result.finalUrl;
+        return;
+      }
+
+      var doc = new DOMParser().parseFromString(result.html, 'text/html');
+
+      var newFlash = doc.querySelector('.flash-wrap');
+      var oldFlash = document.querySelector('.flash-wrap');
+      if (newFlash && oldFlash) oldFlash.innerHTML = newFlash.innerHTML;
+
+      var newContent = doc.querySelector('.parent-panel');
+      var oldContent = document.querySelector('.parent-panel');
+      if (newContent && oldContent) {
+        oldContent.innerHTML = newContent.innerHTML;
+      }
+
+      document.querySelectorAll('.modal-backdrop.active').forEach(function (m) {
+        m.classList.remove('active');
+      });
+
+      try {
+        var savedSection = sessionStorage.getItem('ui_active_section');
+        if (savedSection) {
+          var nav = document.querySelector('.adminnav[data-section="' + savedSection + '"]');
+          if (nav) {
+            document.querySelectorAll('.adminnav').forEach(function (x) { x.classList.remove('active'); });
+            nav.classList.add('active');
+            document.querySelectorAll('.content-section').forEach(function (sec) {
+              sec.classList.toggle('active', sec.dataset.section === savedSection);
+            });
+          }
+        }
+      } catch (e) { /* ignore */ }
+
+      setTimeout(hideLoadingOverlay, 150);
+    })
+    .catch(function (err) {
+      console.error('Form error:', err);
+      hideLoadingOverlay();
+      alert('Error: ' + err.message);
+    })
+    .finally(function () {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitBtn.dataset.originalText || originalText;
+      }
+    });
+  }, true);
+
+  /* ---------- Notifications ---------- */
+  var notifPanel = document.getElementById('notifPanel');
+  var notifBell = document.getElementById('notifBell');
+  var notifList = document.getElementById('notifList');
+  var notifDot = document.getElementById('notifDot');
+  var closeNotifBtn = document.getElementById('closeNotifBtn');
+  var markAllReadBtn = document.getElementById('markAllReadBtn');
+
+  function openNotifPanel() {
+    if (notifPanel) notifPanel.classList.add('active');
+    loadNotifications();
+  }
+  function closeNotifPanel() {
+    if (notifPanel) notifPanel.classList.remove('active');
+  }
+  function toggleNotifPanel() {
+    if (!notifPanel) return;
+    if (notifPanel.classList.contains('active')) closeNotifPanel();
+    else openNotifPanel();
+  }
+
+  function loadNotifications() {
+    if (!notifList) return;
+    fetch('/api/notifications').then(function (r) { return r.json(); }).then(function (rows) {
+      if (!Array.isArray(rows) || rows.length === 0) {
+        notifList.innerHTML = '<p class="empty" style="padding:1.5rem;text-align:center;">No notifications yet.</p>';
+        return;
+      }
+      notifList.innerHTML = rows.map(function (n) {
+        var title = (n.title || '').replace(/[<>]/g, '');
+        var msg = (n.message || '').replace(/[<>]/g, '');
+        // Match 12-char hex IDs with word boundaries (avoid matching substrings)
+        var msgWithIds = msg.replace(/\b([A-F0-9]{12})\b/g,
+          '<code class="notif-id-code" data-copy="$1" ' +
+          'onclick="event.stopPropagation()" ' +
+          'style="cursor:pointer;background:rgba(124,179,255,.15);' +
+          'padding:1px 6px;border-radius:4px;display:inline-block;">$1 📋</code>');
+        return '<div class="notif-item ' + (n.read ? '' : 'unread') + '" data-nid="' + n.id + '"' +
+               (n.link ? ' data-link="' + n.link + '"' : '') + '>' +
+               '<b>' + title + '</b>' +
+               '<p>' + msgWithIds + '</p>' +
+               '<small>' + n.created_at + '</small>' +
+               '</div>';
+      }).join('');
+      notifList.querySelectorAll('.notif-item').forEach(function (el) {
+        el.addEventListener('click', function (ev) {
+          /* Ignore clicks on the copy-ID code element */
+          if (ev.target.closest('[data-copy]')) return;
+
+          var nid = el.getAttribute('data-nid');
+          var link = el.getAttribute('data-link');
+
+          /* ─── OPTIMISTIC UI: mark THIS notification as read ─── */
+          el.classList.remove('unread');
+
+          /* ─── Update red dot based on REMAINING unread items ─── */
+          var stillUnread = notifList.querySelectorAll('.notif-item.unread').length;
+          if (notifDot) {
+            if (stillUnread > 0) notifDot.classList.remove('hidden');
+            else notifDot.classList.add('hidden');
+          }
+
+          /* ─── Close panel ─── */
+          if (notifPanel) notifPanel.classList.remove('active');
+
+          /* ─── Wait for fetch POST, THEN navigate ─── */
+          fetch('/api/notifications/' + nid + '/read', { method: 'POST' })
+            .then(function () {
+              if (!link) {
+                loadNotifications();
+                updateNotifDot();
+                return;
+              }
+
+              /* ─── Parse link: /path#hash ─── */
+              var parts = link.split('#');
+              var linkPath = parts[0] || '';
+              var linkHash = parts[1] || '';
+              var currentPath = window.location.pathname;
+
+              if (linkPath === currentPath && linkHash) {
+                /* Same page — hash change */
+                if (window.location.hash === '#' + linkHash) {
+                  var targetNav = document.querySelector('.adminnav[data-section="' + linkHash + '"]');
+                  if (targetNav) {
+                    document.querySelectorAll('.adminnav').forEach(function (x) { x.classList.remove('active'); });
+                    targetNav.classList.add('active');
+                    document.querySelectorAll('.content-section').forEach(function (sec) {
+                      sec.classList.toggle('active', sec.dataset.section === linkHash);
+                    });
+                    try { sessionStorage.setItem('ui_active_section', linkHash); } catch (e) {}
+                    window.scrollTo(0, 0);
+                  }
+                } else {
+                  window.location.hash = linkHash;
+                }
+              } else {
+                /* Different page — full navigation */
+                window.location.href = link;
+              }
+            })
+            .catch(function () {
+              if (link) window.location.href = link;
+            });
+        });
+      });
+    });
+  }
+
+  function updateNotifDot() {
+    fetch('/api/notifications').then(function (r) { return r.json(); }).then(function (rows) {
+      if (!Array.isArray(rows)) return;
+
+      /* Server-side unread count */
+      var serverUnread = rows.filter(function (n) { return !n.read; }).length;
+
+      /* If panel is open, cross-check local DOM state (optimistic UI) */
+      var localUnread = null;
+      if (notifList && notifPanel && notifPanel.classList.contains('active')) {
+        localUnread = notifList.querySelectorAll('.notif-item.unread').length;
+      }
+
+      /* Trust the smaller count (optimistic UI hides faster) */
+      var unread = serverUnread;
+      if (localUnread !== null && localUnread < serverUnread) {
+        unread = localUnread;
+      }
+
+      if (notifDot) {
+        if (unread > 0) notifDot.classList.remove('hidden');
+        else notifDot.classList.add('hidden');
+      }
+    });
+  }
+
+  function markAllRead() {
+    /* ─── Optimistic: hide dot + clear highlights right away ─── */
+    if (notifDot) notifDot.classList.add('hidden');
+    if (notifList) {
+      notifList.querySelectorAll('.notif-item.unread').forEach(function (el) {
+        el.classList.remove('unread');
+      });
+    }
+
+    fetch('/api/notifications/read-all', { method: 'POST' }).then(function () {
+      loadNotifications();
+      updateNotifDot();
+    });
+  }
+
+  if (notifBell) notifBell.addEventListener('click', toggleNotifPanel);
+  if (closeNotifBtn) closeNotifBtn.addEventListener('click', closeNotifPanel);
+  if (markAllReadBtn) markAllReadBtn.addEventListener('click', markAllRead);
+  setInterval(updateNotifDot, 15000);
+
+  /* ---------- Close notif panel on outside click ---------- */
+  document.addEventListener('click', function (e) {
+    if (!notifPanel || !notifPanel.classList.contains('active')) return;
+    // Ignore clicks inside the panel or on the bell
+    if (e.target.closest('#notifPanel')) return;
+    if (e.target.closest('#notifBell')) return;
+    closeNotifPanel();
+  });
+
+  /* ---------- Close notif panel on Escape key ---------- */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && notifPanel && notifPanel.classList.contains('active')) {
+      closeNotifPanel();
+    }
+  });
+
+  /* ---------- Global search ---------- */
+  var gsInput = document.getElementById('globalSearch');
+  var gsDrop = document.getElementById('globalSearchDropdown');
+  if (gsInput && gsDrop) {
+    var gsTimer = null;
+    gsInput.addEventListener('input', function () {
+      clearTimeout(gsTimer);
+      var q = gsInput.value.trim();
+      if (!q) { gsDrop.style.display = 'none'; gsDrop.innerHTML = ''; return; }
+      gsTimer = setTimeout(function () {
+        fetch('/api/search?q=' + encodeURIComponent(q))
+          .then(function (r) { return r.json(); })
+          .then(function (rows) {
+            if (!Array.isArray(rows) || rows.length === 0) {
+              gsDrop.innerHTML = '<div style="padding:1rem;text-align:center;" class="muted small">No users found.</div>';
+            } else {
+              gsDrop.innerHTML = rows.map(function (u) {
+                return '<div class="gs-item" data-username="' + u.username + '" ' +
+                       'style="padding:.7rem 1rem;cursor:pointer;border-bottom:1px solid var(--border);">' +
+                       '<b style="color:#fff">' + u.full_name + '</b> ' +
+                       '<span class="muted small">@' + u.username + '</span><br>' +
+                       '<span class="badge badge-purple" style="margin-top:4px">' + u.role + '</span>' +
+                       '</div>';
+              }).join('');
+              gsDrop.querySelectorAll('.gs-item').forEach(function (el) {
+                el.addEventListener('mouseenter', function () { el.style.background = 'rgba(24,119,242,.1)'; });
+                el.addEventListener('mouseleave', function () { el.style.background = 'transparent'; });
+                el.addEventListener('click', function () {
+                  window.location.href = '/profile/' + el.getAttribute('data-username');
+                });
+              });
+            }
+            gsDrop.style.display = 'block';
+          });
+      }, 200);
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.global-search')) gsDrop.style.display = 'none';
+    });
+  }
+
+  /* ---------- Leaderboard polling ---------- */
+  window.refreshLeaderboard = function (targetId) {
+    var box = document.getElementById(targetId);
+    if (!box) return;
+    fetch('/api/leaderboard')
+      .then(function (r) { return r.json(); })
+      .then(function (rows) {
+        if (!Array.isArray(rows)) return;
+        if (rows.length === 0) {
+          box.innerHTML = '<p class="empty">No students ranked yet.</p>';
+          return;
+        }
+        box.innerHTML = rows.map(function (r) {
+          var cls = r.rank === 1 ? 'top1' : r.rank === 2 ? 'top2' : r.rank === 3 ? 'top3' : '';
+          var medals =
+            (r.gold   ? '<span class="medal medal-Gold">🥇 ' + r.gold + '</span> ' : '') +
+            (r.silver ? '<span class="medal medal-Silver">🥈 ' + r.silver + '</span> ' : '') +
+            (r.bronze ? '<span class="medal medal-Bronze">🥉 ' + r.bronze + '</span>' : '');
+          return '<div class="lb-row ' + cls + '">' +
+                   '<div class="lb-rank">#' + r.rank + '</div>' +
+                   '<div class="lb-name">' + r.full_name +
+                     ' <span class="muted small">@' + r.username + '</span></div>' +
+                   '<div class="pill-row">' + (medals || '<span class="tag">no medals</span>') + '</div>' +
+                   '<div class="lb-pts">' + r.points + ' pts</div>' +
+                 '</div>';
+        }).join('');
+      })
+      .catch(function () {});
+  };
+
+  document.addEventListener('DOMContentLoaded', function () {
+    ['lb-admin', 'lb-teacher', 'lb-student'].forEach(function (id) {
+      if (document.getElementById(id)) {
+        window.refreshLeaderboard(id);
+        setInterval(function () { window.refreshLeaderboard(id); }, 8000);
+      }
+    });
+  });
+    /* ---------- Click-to-Copy IDs ---------- */
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-copy]');
+    if (!el) return;
+    e.preventDefault();
+    var text = el.getAttribute('data-copy');
+    if (!text) return;
+
+    /* Copy to clipboard */
+    var copyText = function (str) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(str);
+      }
+      /* Fallback for HTTP / older browsers */
+      return new Promise(function (resolve, reject) {
+        var ta = document.createElement('textarea');
+        ta.value = str;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          resolve();
+        } catch (err) {
+          reject(err);
+        } finally {
+          document.body.removeChild(ta);
+        }
+      });
+    };
+
+    copyText(text).then(function () {
+      showCopyToast(text);
+    }).catch(function () {
+      /* last resort: prompt */
+      window.prompt('Copy this ID:', text);
+    });
+  });
+
+  function showCopyToast(text) {
+    var toast = document.getElementById('copyToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'copyToast';
+      toast.style.cssText = [
+        'position:fixed',
+        'bottom:24px',
+        'left:50%',
+        'transform:translateX(-50%) translateY(20px)',
+        'background:#1877f2',
+        'color:#fff',
+        'padding:12px 20px',
+        'border-radius:10px',
+        'font-size:.9rem',
+        'font-weight:600',
+        'box-shadow:0 10px 30px rgba(24,119,242,.4)',
+        'z-index:99999',
+        'opacity:0',
+        'transition:all .25s ease',
+        'pointer-events:none',
+        'display:flex',
+        'align-items:center',
+        'gap:8px'
+      ].join(';');
+      document.body.appendChild(toast);
+    }
+    toast.innerHTML = '✅ Copied: <code style="background:rgba(255,255,255,.15);color:#fff;padding:2px 8px;border-radius:5px;font-family:monospace;">' + text + '</code>';
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(function () {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 2200);
+  }
+
+
+  
+  /* ---------- Study timer ---------- */
+  
+})();
+
+  /* ---------- Global Back Button ----------
+     Returns to previous page if there's history.
+     Falls back to dashboard if no history (e.g. direct URL access). */
+  window.goBack = function () {
+    var ref = document.documentURI || '';
+
+    /* If we came from another profile page, go to dashboard instead
+       (avoids bouncing between profiles) */
+    if (document.referrer && document.referrer.indexOf('/profile/') !== -1) {
+      window.location.href = '/dashboard';
+      return;
+    }
+
+    /* If there's browser history and a referrer, go back */
+    if (window.history.length > 1 && document.referrer) {
+      window.history.back();
+    } else {
+      /* Fallback — go to dashboard */
+      window.location.href = '/dashboard';
+    }
+  };
+</script>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

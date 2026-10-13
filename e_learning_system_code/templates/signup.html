@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block auth_content %}
+<div class="auth-card">
+  <div class="auth-head">
+    <div>
+      <svg xmlns="http://www.w3.org/2000/svg" class="logo-big" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M22 9l-10 -4l-10 4l10 4l10 -4v6" />
+        <path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4" />
+      </svg>
+    </div>
+    <h1>Create Your Account</h1>
+    <p class="muted small">Sign up as Teacher or Student. You'll get a unique ID to connect.</p>
+  </div>
+
+  <form method="POST" action="{{ url_for('signup') }}" class="form" data-no-ajax>
+    <label>Full name
+      <input type="text" name="full_name" autocomplete="name"
+             value="{{ form_data.full_name if form_data else '' }}"
+             placeholder="Juan Dela Cruz">
+    </label>
+
+    <label>Username *
+      <input type="text" name="username" required autocomplete="username"
+             value="{{ form_data.username if form_data else '' }}">
+    </label>
+
+    <label>Password *
+      <input type="password" name="password" required minlength="8"
+             autocomplete="new-password"
+             placeholder="At least 8 characters">
+    </label>
+
+    <label>Confirm Password *
+      <input type="password" name="password_confirm" required minlength="8"
+             autocomplete="new-password"
+             placeholder="Re-type password">
+    </label>
+
+    <label>I am a... *
+      <select name="role" required>
+        <option value="">-- select role --</option>
+        <option value="Teacher" {% if form_data and form_data.role == 'Teacher' %}selected{% endif %}>Teacher</option>
+        <option value="Student" {% if form_data and form_data.role == 'Student' %}selected{% endif %}>Student</option>
+      </select>
+    </label>
+
+    <div class="modal-actions" style="justify-content:space-between;">
+      <a class="btn btn-ghost" href="{{ url_for('login') }}">← Back</a>
+      <button type="submit" class="btn btn-green">Create Account</button>
+    </div>
+  </form>
+
+  <div class="auth-foot">
+    <p class="muted small">After signup, you'll get a unique ID to share.</p>
+  </div>
+</div>
+{% endblock %}

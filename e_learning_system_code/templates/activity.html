@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% if is_preview %}Preview{% else %}Build Activity{% endif %}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#1e1e1e;--card:#2d2d30;--border:#3a3a3a;--text:#e0e0e0;
+  --text-dim:#999;--muted:#ccc;--blue:#1877f2;--blue-hover:#2d88ff;
+  --green:#22c55e;--red:#ef4444;--yellow:#eab308;--purple:#a855f7;
+}
+body{background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,sans-serif;font-size:14px;
+  line-height:1.55;min-height:100vh;padding:24px 16px;
+  -webkit-font-smoothing:antialiased;}
+h1{font-size:1.4rem;color:#fff;font-weight:600}
+h2{font-size:1.1rem;color:#fff;font-weight:600;margin-bottom:.35rem}
+.wrap{max-width:720px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:16px 18px;margin-bottom:16px}
+.card-title{display:flex;justify-content:space-between;align-items:center;
+  gap:10px;margin-bottom:12px;flex-wrap:wrap}
+label{display:flex;flex-direction:column;gap:4px;
+  font-size:.78rem;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+input[type=text],input[type=number],input[type=file],textarea,select{
+  width:100%;padding:10px 12px;border-radius:6px;
+  border:1px solid var(--border);background:#151517;color:var(--text);
+  font-size:.9rem;font-family:inherit;outline:none;transition:.15s}
+input:focus,textarea:focus,select:focus{border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(24,119,242,.18)}
+textarea{resize:vertical;min-height:70px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;
+  border:none;border-radius:6px;padding:9px 16px;font-size:.86rem;
+  font-weight:600;cursor:pointer;font-family:inherit;transition:.15s;
+  color:#fff;text-decoration:none}
+.btn:hover{transform:translateY(-1px);text-decoration:none}
+.btn-blue{background:var(--blue)}.btn-blue:hover{background:var(--blue-hover)}
+.btn-green{background:var(--green)}.btn-red{background:var(--red)}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-ghost:hover{background:#333}
+.btn-sm{padding:6px 12px;font-size:.8rem}
+.tag{display:inline-block;background:#151517;border:1px solid var(--border);
+  border-radius:999px;padding:2px 10px;font-size:.72rem;color:var(--text-dim)}
+.pill-row{display:flex;gap:6px;flex-wrap:wrap}
+.muted{color:var(--muted)}.small{font-size:.8rem}
+.row-between{display:flex;gap:10px;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;margin-top:16px}
+.row-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.choices{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.choice-row{display:flex;gap:8px;align-items:center}
+.choice-letter{width:32px;height:32px;background:#151517;
+  border:1px solid var(--border);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;color:var(--text-dim);flex-shrink:0}
+.choice-row input[type=radio]{width:20px;height:20px;flex-shrink:0}
+.tf-row{display:flex;gap:16px;margin-top:8px}
+.tf-row label{flex-direction:row;align-items:center;text-transform:none;
+  font-size:.95rem;font-weight:500;gap:8px;margin:0;color:var(--text)}
+
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid #3a3a3a}
+th{background:#232326;font-size:.72rem;text-transform:uppercase;color:#999}
+.table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border)}
+@media(max-width:560px){
+  body{padding:12px 8px}
+  .card{padding:12px}
+  h1{font-size:1.15rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+{% if not is_preview %}
+{# ═══════════ EDIT MODE ═══════════ #}
+
+<div class="card">
+  <div class="card-title">
+    <h1>✏️ Build Activity</h1>
+    <span class="tag">Page {{ page_idx + 1 }} / {{ study.total_pages }}</span>
+  </div>
+  <div class="pill-row">
+    <span class="tag">{{ study.type|replace('_',' ')|capitalize }}</span>
+    <span class="tag">{{ 'Study + Quiz' if study.mode == 'study_and_quiz' else 'Direct Quiz' }}</span>
+    {% if study.mode == 'study_and_quiz' %}
+      <span class="tag">⏱ Study: {{ study.study_timer }}s</span>
+    {% endif %}
+    <span class="tag">⏱ Per Q: {{ study.question_timer }}s</span>
+    {% if study.type == 'multiple_choice' %}
+      <span class="tag">{{ study.mc_options }} choices</span>
+    {% endif %}
+    <span class="tag">↩ Max back: {{ study.max_back }}</span>
+    <span class="tag">+{{ study.score }}</span>
+    <span class="tag">−{{ study.penalty }}</span>
+  </div>
+</div>
+
+<form method="POST" action="/api/studies/{{ study.id }}/save_page/{{ page_idx }}">
+  <div class="card">
+    <h2>Activity Details</h2>
+    <label>Title *
+      <input type="text" name="title"
+             value="{{ study.title if study.title != 'Untitled Study' else '' }}"
+             placeholder="e.g. Quiz 1: Multiplication" required>
+    </label>
+    <label>Direction (Optional)
+      <textarea name="direction" placeholder="Instructions for students…">{{ study.direction or '' }}</textarea>
+    </label>
+  </div>
+
+  {% if page_idx < study.pages|length %}
+    {% set current = study.pages[page_idx] %}
+  {% else %}
+    {% set current = {'question':''} %}
+  {% endif %}
+
+  <div class="card">
+    <h2>Question {{ page_idx + 1 }}</h2>
+
+    <label>Question *
+      <input type="text" name="question" value="{{ current.question or '' }}"
+             placeholder="Type the question…" required autofocus>
+    </label>
+
+    {# ─── Identification ─── #}
+    {% if study.type == 'identification' %}
+      <label>Correct Answer *
+        <input type="text" name="correct_answer"
+               value="{{ current.correct_answer or '' }}"
+               placeholder="Type the exact answer…" required>
+      </label>
+
+    {# ─── Multiple Choice ─── #}
+    {% elif study.type == 'multiple_choice' %}
+      {% set letters = ['A','B','C','D'] %}
+      <label>Choices (click the circle to mark the correct answer)</label>
+      <div class="choices">
+        {% for i in range(study.mc_options) %}
+          {% set choice_val = current.choices[i] if current.choices and current.choices|length > i else '' %}
+          <div class="choice-row">
+            <input type="radio" name="correct_index" value="{{ i }}"
+                   {% if current.correct_index == i %}checked{% endif %} required>
+            <div class="choice-letter">{{ letters[i] }}</div>
+            <input type="text" name="choice_{{ i }}" value="{{ choice_val }}"
+                   placeholder="Choice {{ letters[i] }} text…" required>
+          </div>
+        {% endfor %}
+      </div>
+
+    {# ─── True or False ─── #}
+    {% elif study.type == 'true_false' %}
+      <label>Correct Answer *</label>
+      <div class="tf-row">
+        <label><input type="radio" name="correct_bool" value="true"
+                      {% if current.correct_bool != false %}checked{% endif %}> ✓ True</label>
+        <label><input type="radio" name="correct_bool" value="false"
+                      {% if current.correct_bool == false %}checked{% endif %}> ✗ False</label>
+      </div>
+
+    {# ─── Essay ─── #}
+    {% elif study.type == 'essay' %}
+      <label>Reference Answer (Optional — guide lang for grading)
+        <textarea name="reference"
+                  placeholder="Reference answer / rubric…">{{ current.reference or '' }}</textarea>
+      </label>
+      <p class="muted small">Students will type a free-text answer. Ikaw ang mag-grade manually.</p>
+
+    {# ─── File Upload ─── #}
+    {% elif study.type == 'file_upload' %}
+      <label>Instruction (Optional)
+        <textarea name="instruction"
+                  placeholder="e.g. Upload a PDF of your essay…">{{ current.instruction or '' }}</textarea>
+      </label>
+      <p class="muted small">Students will upload a file. Ikaw ang mag-grade manually.</p>
+    {% endif %}
+  </div>
+
+  <p class="muted small" style="text-align:center;margin:1rem 0;">
+      Page <b>{{ page_idx + 1 }}</b> of <b>{{ study.total_pages }}</b>
+  </p>
+
+  <div class="row-between">
+    {% if page_idx > 0 %}
+      <a href="/teacher/activity/{{ study.id }}/{{ page_idx - 1 }}" class="btn btn-ghost">← Previous</a>
+    {% else %}
+      <a href="{{ url_for('teacher_page') }}" class="btn btn-ghost">Cancel</a>
+    {% endif %}
+    {% if page_idx + 1 < study.total_pages %}
+      <button type="submit" class="btn btn-blue">Save & Next →</button>
+    {% else %}
+      <button type="submit" class="btn btn-green">Save & Preview ✓</button>
+    {% endif %}
+  </div>
+</form>
+
+{% else %}
+{# ═══════════ PREVIEW ═══════════ #}
+
+<div class="card">
+  <div class="card-title"><h1>📋 Preview</h1></div>
+  <h2>{{ study.title }}</h2>
+  {% if study.direction %}
+    <p class="muted small" style="font-style:italic;margin-top:.4rem;">{{ study.direction }}</p>
+  {% endif %}
+  <div class="pill-row" style="margin-top:10px;">
+    <span class="tag">{{ study.type|replace('_',' ')|capitalize }}</span>
+    <span class="tag">{{ 'Study + Quiz' if study.mode == 'study_and_quiz' else 'Direct Quiz' }}</span>
+    {% if study.mode == 'study_and_quiz' %}
+      <span class="tag">⏱ Study: {{ study.study_timer }}s</span>
+    {% endif %}
+    <span class="tag">⏱ Per Q: {{ study.question_timer }}s</span>
+    {% if study.type == 'multiple_choice' %}
+      <span class="tag">{{ study.mc_options }} choices</span>
+    {% endif %}
+    <span class="tag">↩ Max back: {{ study.max_back }}</span>
+    <span class="tag">+{{ study.score }}</span>
+    <span class="tag">−{{ study.penalty }}</span>
+  </div>
+</div>
+
+{# Study material only if mode = study_and_quiz #}
+{% if study.mode == 'study_and_quiz' %}
+  {% set slide_lines = [] %}
+  {% if study.slides %}
+    {% for s in study.slides %}
+      {% if s is string %}{% set _ = slide_lines.append(s) %}
+      {% elif s is mapping and s.text %}{% set _ = slide_lines.append(s.text) %}{% endif %}
+    {% endfor %}
+  {% endif %}
+  <div class="card">
+    <div class="card-title">
+      <h2>📎 Study Material</h2>
+      <span class="tag">{{ slide_lines|length }} slide(s)</span>
+    </div>
+    <p class="muted small" style="margin-bottom:12px;">
+      Study phase: <b>{{ study.study_timer }}s</b> bago mag-quiz.
+    </p>
+    <label>Bawat linya = 1 slide
+      <textarea id="slidesInput" rows="6"
+                placeholder="Slide 1 content…
+Slide 2 content…">{{ slide_lines|join('\n') }}</textarea>
+    </label>
+    <div class="row-inline" style="justify-content:flex-end;margin-top:12px;">
+      {% if slide_lines %}
+        <button type="button" class="btn btn-red btn-sm" id="clearSlidesBtn">🗑 Clear</button>
+      {% endif %}
+      <button type="button" class="btn btn-blue btn-sm" id="saveSlidesBtn">💾 Save Slides</button>
+    </div>
+  </div>
+{% endif %}
+
+<div class="card">
+  <div class="card-title">
+    <h2>📝 Questions Preview</h2>
+    <span class="muted small">{{ study.total_pages }} page(s)</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40px;">#</th>
+          <th>Question</th>
+          <th>Answer</th>
+          <th style="width:70px;">Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for q in study.pages %}
+        <tr>
+          <td><b>{{ loop.index }}</b></td>
+          <td>{{ q.question or '—' }}</td>
+          <td>
+            {% if study.type == 'identification' %}
+              {{ q.correct_answer or '—' }}
+            {% elif study.type == 'multiple_choice' %}
+              {% set letters = ['A','B','C','D'] %}
+              <b>{{ letters[q.correct_index] }}.</b>
+              {{ q.choices[q.correct_index] if q.choices and q.choices|length > q.correct_index else '—' }}
+            {% elif study.type == 'true_false' %}
+              {{ 'True' if q.correct_bool else 'False' }}
+            {% elif study.type == 'essay' %}
+              <span class="muted">(manual grading)</span>
+            {% elif study.type == 'file_upload' %}
+              <span class="muted">(manual grading)</span>
+            {% endif %}
+          </td>
+          <td>
+            <a class="btn btn-blue btn-sm"
+               href="/teacher/activity/{{ study.id }}/{{ loop.index0 }}">Edit</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row-between">
+  <a href="/teacher/activity/{{ study.id }}/0" class="btn btn-ghost">← Edit Again</a>
+  <div class="row-inline">
+    <a href="{{ url_for('teacher_page') }}" class="btn btn-ghost">Cancel</a>
+    <form method="POST" action="/api/studies/{{ study.id }}/publish" style="display:inline;">
+      <button type="submit" class="btn btn-green">🚀 Publish to Students</button>
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var stid = "{{ study.id }}";
+  var saveBtn  = document.getElementById('saveSlidesBtn');
+  var clearBtn = document.getElementById('clearSlidesBtn');
+  var input    = document.getElementById('slidesInput');
+  function postSlides(slides, onDone){
+    fetch('/api/studies/' + stid + '/save_slides', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      credentials:'same-origin', body: JSON.stringify({slides: slides})
+    }).then(function(r){return r.json();}).then(function(d){
+      if(!d.ok){ alert('❌ ' + (d.error || 'Failed')); return; }
+      if(onDone) onDone();
+    }).catch(function(e){ alert('❌ ' + e.message); });
+  }
+  if(saveBtn) saveBtn.onclick = function(){
+    var raw = input.value.trim();
+    var lines = raw ? raw.split('\n').map(function(l){return l.trim();}).filter(Boolean) : [];
+    saveBtn.disabled = true; saveBtn.textContent = 'Saving…';
+    postSlides(lines.map(function(t){return {text:t};}), function(){ window.location.reload(); });
+  };
+  if(clearBtn) clearBtn.onclick = function(){
+    if(!confirm('Clear all slides?')) return;
+    postSlides([], function(){ window.location.reload(); });
+  };
+})();
+</script>
+
+{% endif %}
+</div>
+</body>
+</html>

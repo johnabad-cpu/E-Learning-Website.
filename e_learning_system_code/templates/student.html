@@ -1,0 +1,407 @@
+{% extends "base.html" %}
+{% block title %}Student{% endblock %}
+{% block page_title %}Student Dashboard{% endblock %}
+{% block page_sub %}{{ user.full_name }} · ID: <code data-copy="{{ my_id }}" title="Click to copy" style="cursor:pointer;">{{ my_id }} 📋</code>{% endblock %}
+
+{% block nav_items %}
+<li><a class="adminnav active" data-section="overview"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-layout-dashboard"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 4h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /><path d="M5 16h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /><path d="M15 12h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /><path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /></svg><span>Overview</span></a></li>
+<li><a class="adminnav" data-section="connect"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-connection"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M15 6.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0" /><path d="M4 17.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0" /><path d="M8.5 15.5l7 -7" /></svg><span>Connect</span></a></li>
+<li><a class="adminnav" data-section="teachers"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chalkboard-teacher"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 19h-3a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v11a1 1 0 0 1 -1 1" /><path d="M12 14a2 2 0 1 0 4.001 -.001a2 2 0 0 0 -4.001 .001" /><path d="M17 19a2 2 0 0 0 -2 -2h-2a2 2 0 0 0 -2 2" /></svg><span>My Teachers</span></a></li>
+<li><a class="adminnav" data-section="classmates"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg><span>Classmates</span></a></li>
+<li><a class="adminnav" data-section="studies"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-book"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" /><path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" /><path d="M3 6l0 13" /><path d="M12 6l0 13" /><path d="M21 6l0 13" /></svg><span>Studies</span></a></li>
+<li><a class="adminnav" data-section="history"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-article"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 6a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -12" /><path d="M7 8h10" /><path d="M7 12h10" /><path d="M7 16h10" /></svg><span>Quiz History</span></a></li>
+<li><a class="adminnav" data-section="account"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-settings"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg><span>Account</span></a></li>
+{% endblock %}
+
+{% block content %}
+
+<section class="content-section active" data-section="overview">
+  <div class="grid grid-4 mb2">
+    <div class="stat clickable" data-goto="history">
+      <div class="label">My Points</div><div class="value">{{ my_points }}</div>
+    </div>
+    <div class="stat clickable" data-goto="history">
+      <div class="label">My Rank</div><div class="value">{{ '#' + my_rank|string if my_rank else '—' }}</div>
+    </div>
+    <div class="stat clickable" data-goto="teachers">
+      <div class="label">Teachers</div><div class="value">{{ teachers|length }}</div>
+    </div>
+    <div class="stat clickable" data-goto="classmates">
+      <div class="label">Classmates</div><div class="value">{{ classmates|length }}</div>
+    </div>
+  </div>
+
+  {% if teachers|length == 0 %}
+  <div class="card">
+    <h2>👋 Welcome!</h2>
+    <p class="muted mt1">You haven't joined a class yet. Ask your teacher for their <b>ID</b> and enter it in the <b>Connect</b> tab to get started.</p>
+  </div>
+  {% endif %}
+
+  <div class="card mt2">
+    <div class="card-title"><h2>🏆 Leaderboard</h2></div>
+    <div id="lb-student"><p class="empty">Loading…</p></div>
+  </div>
+</section>
+
+<section class="content-section" data-section="connect">
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><h2>🔗 Enter a Teacher's ID</h2></div>
+      <p class="muted small mb1">Ask your teacher for their ID and type it below.</p>
+      <form method="POST" action="{{ url_for('request_connection') }}" class="form">
+        <label>Teacher ID
+          <input type="text" name="target_id" required placeholder="e.g. A3F2B1C8"
+                 style="text-transform:uppercase;letter-spacing:.1em;">
+        </label>
+        <button type="submit" class="btn btn-blue">Send Connection Request</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><h2>🆔 My ID</h2></div>
+      <p class="muted small mb1">Share this ID with teachers so they can connect with you.</p>
+      <div data-copy="{{ my_id }}"
+           title="Click to copy"
+           style="background:#151517;padding:1rem;border-radius:6px;text-align:center;
+                  font-family:monospace;font-size:1.5rem;letter-spacing:.15em;color:#7cb3ff;
+                  cursor:pointer;user-select:none;transition:background .15s;"
+           onmouseover="this.style.background='rgba(24,119,242,.15)'"
+           onmouseout="this.style.background='#151517'">
+        {{ my_id }} <span style="font-size:.9rem;opacity:.6;">📋</span>
+      </div>
+      <button type="button" class="btn btn-ghost btn-block mt1"
+              data-copy="{{ my_id }}"
+              title="Click to copy">
+        📋 Copy ID
+      </button>
+    </div>
+  </div>
+
+  {% if pending_out %}
+  <div class="card mt2">
+    <div class="card-title"><h2>⏳ Sent Requests</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Teacher</th><th>Status</th><th>Sent</th></tr></thead>
+        <tbody>
+          {% for p in pending_out %}
+          <tr>
+            <td><b>{{ p.teacher.full_name }}</b> <span class="muted small">@{{ p.teacher.username }}</span></td>
+            <td><span class="badge badge-yellow">Pending approval</span></td>
+            <td class="muted small">{{ p.conn.created_at }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if pending_in %}
+  <div class="card mt2" style="border-left:3px solid #eab308;">
+    <div class="card-title"><h2>📥 Incoming Requests</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Teacher</th><th>Sent</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for p in pending_in %}
+          <tr>
+            <td><b>{{ p.teacher.full_name }}</b> <span class="muted small">@{{ p.teacher.username }}</span></td>
+            <td class="muted small">{{ p.conn.created_at }}</td>
+            <td>
+              <div class="row-inline">
+                <form method="POST" action="{{ url_for('approve_connection', cid=p.conn.id) }}">
+                  <button class="btn btn-green btn-sm" type="submit">✓ Approve</button>
+                </form>
+                <form method="POST" action="{{ url_for('reject_connection', cid=p.conn.id) }}">
+                  <button class="btn btn-red btn-sm" type="submit">✕ Reject</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</section>
+
+<section class="content-section" data-section="teachers">
+  <div class="card">
+    <div class="card-title"><h2>My Teachers</h2></div>
+    <div class="grid grid-3 mt1">
+      {% for t in teachers %}
+      <div class="card" style="background:var(--bg-2);">
+        <div class="avatar">{{ t.full_name[0]|upper }}</div>
+        <h3 class="mt1">{{ t.full_name }}</h3>
+        <p class="muted small">@{{ t.username }}</p>
+        <a class="btn btn-ghost btn-sm mt1" href="{{ url_for('profile', username=t.username) }}">View Profile</a>
+      </div>
+      {% else %}
+      <p class="empty">No teachers yet. Connect using an ID.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="content-section" data-section="classmates">
+  <div class="card">
+    <div class="card-title"><h2>Classmates</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Username</th><th>Full name</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for c in classmates %}
+          <tr>
+            <td><b>{{ c.username }}</b></td>
+            <td>{{ c.full_name }}</td>
+            <td><a class="btn btn-blue btn-sm" href="{{ url_for('profile', username=c.username) }}">Profile</a></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="3" class="empty">No classmates yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="content-section" data-section="studies">
+  <div class="grid grid-3">
+    {% for s in studies %}
+    <div class="card">
+      <div class="card-title">
+        <h3>{{ s.title }}</h3>
+        {% if s.already_done %}<span class="badge badge-gray">Done</span>{% endif %}
+      </div>
+      <p class="muted small mb1">By {{ s.teacher_name }}</p>
+      <div class="pill-row mb1">
+        <span class="tag">⏱ {{ s.study_timer }}</span>
+        <span class="tag">+{{ s.score }}</span>
+        <span class="tag">-{{ s.penalty }}</span>
+      </div>
+      <button class="btn btn-blue btn-block"
+              data-study-id="{{ s.id }}"
+              data-action="open-study">▶ Study Now</button>
+    </div>
+    {% else %}
+    <p class="empty">No studies available. Join a teacher first.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="content-section" data-section="history">
+  <div class="card">
+    <div class="card-title"><h2>Quiz History</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Study</th><th>Result</th><th>Score</th><th>Medal</th><th>Date</th></tr></thead>
+        <tbody>
+          {% for r in results %}
+          <tr>
+            <td><b>{{ r.study_title }}</b></td>
+            <td>{% if r.correct %}<span class="badge badge-green">Correct</span>
+                {% else %}<span class="badge badge-red">Wrong</span>{% endif %}</td>
+            <td>{{ r.score }}</td>
+            <td>{% if r.medal %}<span class="medal medal-{{ r.medal }}">{{ r.medal }}</span>
+                {% else %}—{% endif %}</td>
+            <td class="muted small">{{ r.timestamp }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="empty">No attempts yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card mt2">
+    <div class="card-title"><h2>My Attendance</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Date</th><th>Teacher</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for a in attendance %}
+          <tr>
+            <td>{{ a.date }}</td>
+            <td>{{ a.teacher_name }}</td>
+            <td>{% if a.status == 'Present' %}<span class="badge badge-green">Present</span>
+                {% elif a.status == 'Late' %}<span class="badge badge-yellow">Late</span>
+                {% else %}<span class="badge badge-red">Absent</span>{% endif %}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="3" class="empty">No attendance yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="content-section" data-section="account">
+  <div class="card" style="max-width:600px;">
+    {% if show_temp_reset %}
+    <div class="card" style="border-left:3px solid #eab308;background:rgba(234,179,8,.08);margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <span style="font-size:1.8rem;">🔑</span>
+        <div>
+          <h3 style="margin:0;color:#fde68a;font-size:1rem;">
+            Password Reset Detected
+          </h3>
+          <p class="muted small" style="margin:2px 0 0;">
+            Your password was reset by an admin. Here's your temp password:
+          </p>
+        </div>
+      </div>
+
+      <div onclick="copyTempPw()"
+           title="Click to copy"
+           style="background:#151517;padding:14px;border-radius:8px;
+                  text-align:center;font-family:'Courier New',monospace;
+                  font-size:1.4rem;letter-spacing:.15em;color:#7cb3ff;
+                  cursor:pointer;user-select:all;font-weight:700;
+                  border:1px solid rgba(24,119,242,.4);transition:all .15s;"
+           onmouseover="this.style.background='rgba(24,119,242,.15)'"
+           onmouseout="this.style.background='#151517'">
+        {{ temp_password }} <span style="font-size:.9rem;opacity:.6;">📋</span>
+      </div>
+
+      <button type="button"
+              class="btn btn-blue btn-block mt2"
+              id="copyTempBtn"
+              onclick="copyTempPw()">
+        📋 Copy Temporary Password
+      </button>
+
+      <p class="muted small" style="margin-top:12px;line-height:1.6;
+         padding-top:10px;border-top:1px dashed rgba(234,179,8,.3);">
+        📌 <b>How to change password:</b><br>
+        Use this <b>temporary password</b> as the "Current Password"
+        in the form below, then set your new password.
+      </p>
+    </div>
+    {% endif %}
+    <div class="card-title">
+      <h2>Account Settings</h2>
+      <button type="button" class="btn btn-yellow btn-sm"
+              data-open="changePasswordModal">
+        🔒 Change Password
+      </button>
+    </div>
+    <p class="muted small mb1">
+      Your ID:
+      <code data-copy="{{ my_id }}" title="Click to copy"
+            style="cursor:pointer;">{{ my_id }} 📋</code>
+    </p>
+    <p class="muted small">Role: <span class="badge badge-purple">{{ user.role }}</span></p>
+    <p class="muted small">Status:
+      {% if user.status == 'active' %}
+        <span class="badge badge-green">Active</span>
+      {% elif user.status == 'pending_delete' %}
+        <span class="badge badge-yellow">Pending Deletion</span>
+      {% elif user.status == 'appealed' %}
+        <span class="badge badge-blue">Appeal Under Review</span>
+      {% else %}
+        <span class="badge badge-gray">{{ user.status }}</span>
+      {% endif %}
+    </p>
+
+    {# Show admin notice if flagged #}
+    {% if user.status == 'pending_delete' %}
+    <div class="card mt2" style="border-left:3px solid #ef4444;background:rgba(239,68,68,.08);">
+      <h3 style="color:#fca5a5;">⚠️ Account Flagged for Deletion</h3>
+      <p class="mt1"><b>Reason:</b> {{ user.delete_reason or 'No reason provided' }}</p>
+      <p class="muted small">Scheduled for deletion: <b>{{ user.delete_grace_until or '—' }}</b></p>
+      <hr class="sep">
+      <h3>Submit an Appeal</h3>
+      <p class="muted small">Explain why your account should not be deleted.</p>
+      <form method="POST" action="{{ url_for('appeal_delete') }}" class="form mt1">
+        <label>Your appeal message
+          <textarea name="message" required placeholder="I believe my account was flagged by mistake because..."></textarea>
+        </label>
+        <button type="submit" class="btn btn-blue">📩 Submit Appeal</button>
+      </form>
+    </div>
+    {% elif user.status == 'appealed' %}
+    <div class="card mt2" style="border-left:3px solid #3b82f6;background:rgba(24,119,242,.06);">
+      <h3>📩 Appeal Under Review</h3>
+      <p class="muted small mt1">The Super Admin is reviewing your appeal. Please wait for a response.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyTempPw() {
+  var txt = "{{ temp_password }}";
+  if (!txt) return;
+  function showCopied() {
+    var btn = document.getElementById('copyTempBtn');
+    if (!btn) return;
+    var orig = btn.textContent;
+    btn.textContent = '✅ Copied to clipboard!';
+    btn.style.background = 'var(--green)';
+    setTimeout(function () {
+      btn.textContent = orig;
+      btn.style.background = '';
+    }, 1800);
+  }
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(txt).then(showCopied).catch(function () {
+      fallbackCopy(txt); showCopied();
+    });
+  } else {
+    fallbackCopy(txt); showCopied();
+  }
+}
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+}
+document.querySelectorAll('.stat.clickable').forEach(function (card) {
+  card.addEventListener('click', function () {
+    var target = card.getAttribute('data-goto');
+    var nav = document.querySelector('.adminnav[data-section="' + target + '"]');
+    if (nav) nav.click();
+  });
+});
+(function(){
+  'use strict';
+  
+  /* Event delegation — hanapin ang study by ID */
+  document.addEventListener('click', function(ev){
+  var btn = ev.target.closest('[data-action="open-study"]');
+  if(!btn) return;
+  ev.preventDefault();
+  var id = btn.getAttribute('data-study-id');
+  window.location.href = '/student/activity/' + id;
+});
+
+  /* Leaderboard */
+  var lb = document.getElementById('lb-student');
+  if(lb){
+    fetch('/api/leaderboard').then(function(r){return r.json()}).then(function(rows){
+      if(!rows.length){ lb.innerHTML = '<p class="empty">No students ranked yet.</p>'; return; }
+      lb.innerHTML = rows.slice(0,10).map(function(r){
+        var cls = r.rank===1?'top1':r.rank===2?'top2':r.rank===3?'top3':'';
+        return '<div class="lb-row '+cls+'"><div class="lb-rank">#'+r.rank+'</div>'+
+               '<div class="lb-name">'+r.full_name+'</div>'+
+               '<div class="lb-pts">'+r.points+' pts</div></div>';
+      }).join('');
+    });
+  }
+})();
+</script>
+{% endblock %}

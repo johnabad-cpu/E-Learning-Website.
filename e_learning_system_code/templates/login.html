@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block auth_content %}
+
+{# ═══════════════ TEMP PASSWORD DISPLAY ═══════════════ #}
+{% if show_temp %}
+<div class="auth-card" style="margin-bottom:16px;
+     background:rgba(234,179,8,.12);
+     border:2px solid rgba(234,179,8,.5);
+     box-shadow:0 0 0 4px rgba(234,179,8,.08);">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+    <span style="font-size:2rem;">🔑</span>
+    <div>
+      <h2 style="margin:0;color:#fde68a;font-size:1.1rem;">
+        Password Reset Detected
+      </h2>
+      <p class="muted small" style="margin:2px 0 0;">
+        Hi <b>{{ temp_full_name }}</b>!
+      </p>
+    </div>
+  </div>
+
+  <p class="small" style="margin:8px 0 6px;color:#fef3c7;">
+    Your <b>temporary password</b>:
+  </p>
+
+  <div id="tempPwDisplay"
+       onclick="copyTempPw()"
+       title="Click to copy"
+       style="background:#151517;padding:16px;border-radius:8px;
+              text-align:center;font-family:'Courier New',monospace;
+              font-size:1.5rem;letter-spacing:.15em;color:#7cb3ff;
+              cursor:pointer;user-select:all;font-weight:700;
+              border:1px solid rgba(24,119,242,.4);transition:all .15s;"
+       onmouseover="this.style.background='rgba(24,119,242,.15)'"
+       onmouseout="this.style.background='#151517'">
+    {{ temp_password }} <span style="font-size:.9rem;opacity:.6;">📋</span>
+  </div>
+
+  <button type="button"
+          class="btn btn-blue btn-block mt2"
+          id="copyTempBtn"
+          onclick="copyTempPw()">
+    📋 Copy Temporary Password
+  </button>
+
+  <div class="muted small" style="margin-top:14px;line-height:1.7;
+       padding-top:12px;border-top:1px dashed rgba(234,179,8,.3);">
+    <b style="color:#fef3c7;">Next steps:</b><br>
+    1. Copy the temp password above<br>
+    2. Log in using your username + temp password<br>
+    3. Change your password in Account Settings
+  </div>
+</div>
+{% endif %}
+
+{# ═══════════════ LOGIN CARD ═══════════════ #}
+<div class="auth-card">
+  <div class="auth-head">
+    <div>
+      <svg xmlns="http://www.w3.org/2000/svg" class="logo-big" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M22 9l-10 -4l-10 4l10 4l10 -4v6" />
+        <path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4" />
+      </svg>
+    </div>
+    <h1>EduPortal</h1>
+    <p class="muted small">Sign in to continue</p>
+  </div>
+
+  <form method="POST" action="{{ url_for('login') }}" class="form" data-no-ajax>
+    <label>Username
+      <input type="text" name="username" required autocomplete="username"
+             value="{{ temp_username or '' }}"
+             placeholder="Your username">
+    </label>
+    <label>Password
+      <input type="password" name="password" required
+             autocomplete="current-password" placeholder="••••••••"
+             {% if show_temp %}autofocus{% endif %}>
+    </label>
+    <button class="btn btn-blue btn-block" type="submit">Login</button>
+  </form>
+
+  <div class="auth-foot">
+    <p class="muted">
+      No account? <a href="{{ url_for('signup') }}" style="font-weight:700;">Sign Up →</a>
+    </p>
+  </div>
+</div>
+
+{# ═══════════════ COPY FUNCTION ═══════════════ #}
+{% if show_temp %}
+<script>
+function copyTempPw() {
+  var txt = "{{ temp_password }}";
+  if (!txt) return;
+
+  function showCopied() {
+    var btn = document.getElementById('copyTempBtn');
+    if (!btn) return;
+    var orig = btn.textContent;
+    btn.textContent = '✅ Copied to clipboard!';
+    btn.style.background = 'var(--green)';
+    setTimeout(function () {
+      btn.textContent = orig;
+      btn.style.background = '';
+    }, 1800);
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(txt).then(showCopied).catch(function () {
+      fallbackCopy(txt);
+      showCopied();
+    });
+  } else {
+    fallbackCopy(txt);
+    showCopied();
+  }
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+}
+</script>
+{% endif %}
+
+{% endblock %}

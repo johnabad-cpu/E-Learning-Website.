@@ -1,0 +1,981 @@
+{% extends "base.html" %}
+{% block title %}Teacher{% endblock %}
+{% block page_title %}Teacher Dashboard{% endblock %}
+{% block page_sub %}{{ user.full_name }} · ID: <code data-copy="{{ my_id }}" title="Click to copy" style="cursor:pointer;">{{ my_id }} 📋</code>{% endblock %}
+
+{% block nav_items %}
+<li><a class="adminnav active" data-section="overview"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-layout-dashboard"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 4h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /><path d="M5 16h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /><path d="M15 12h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /><path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /></svg><span>Overview</span></a></li>
+<li><a class="adminnav" data-section="connect"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-connection"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M15 6.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0" /><path d="M4 17.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0" /><path d="M8.5 15.5l7 -7" /></svg><span>Connect</span></a></li>
+<li><a class="adminnav" data-section="students"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-backpack"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 18v-6a6 6 0 0 1 6 -6h2a6 6 0 0 1 6 6v6a3 3 0 0 1 -3 3h-8a3 3 0 0 1 -3 -3" /><path d="M10 6v-1a2 2 0 1 1 4 0v1" /><path d="M9 21v-4a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v4" /><path d="M11 10h2" /></svg><span>My Students</span></a></li>
+<li><a class="adminnav" data-section="studies"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-book"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" /><path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" /><path d="M3 6l0 13" /><path d="M12 6l0 13" /><path d="M21 6l0 13" /></svg><span>Studies</span></a></li>
+<li><a class="adminnav" data-section="history"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-writing"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M20 17v-12c0 -1.121 -.879 -2 -2 -2s-2 .879 -2 2v12l2 2l2 -2" /><path d="M16 7h4" /><path d="M18 19h-13a2 2 0 1 1 0 -4h4a2 2 0 1 0 0 -4h-3" /></svg><span>Quiz Attempts</span></a></li>
+<li><a class="adminnav" data-section="attendance"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-calendar"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M11 15h1" /><path d="M12 15v3" /></svg><span>Attendance</span></a></li>
+<li><a class="adminnav" data-section="account"><svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-settings"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg><span>Account</span></a></li>
+{% endblock %}
+
+{% block content %}
+
+{# ═══════════════ OVERVIEW ═══════════════ #}
+<section class="content-section active" data-section="overview">
+  <div class="grid grid-3 mb2">
+    <div class="stat clickable" data-goto="studies">
+      <div class="label">My Studies</div><div class="value">{{ studies|length }}</div>
+    </div>
+    <div class="stat clickable" data-goto="students">
+      <div class="label">Students</div><div class="value">{{ students|length }}</div>
+    </div>
+    <div class="stat clickable" data-goto="history">
+      <div class="label">Quiz Attempts</div><div class="value">{{ results|length }}</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <h2>Studies I Created</h2>
+      <button class="btn btn-blue btn-sm" data-action="add-study">＋ New Study</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in studies %}
+          <tr>
+            <td>
+              <b>{{ s.title }}</b>
+            </td>
+            <td>
+              <span class="badge badge-green">Published</span>
+            </td>
+            <td class="muted small">
+              {{ s.published_at or s.updated_at or s.created_at or '—' }}
+            </td>
+            <td>
+              <button class="btn btn-blue btn-sm"
+                      data-action="view-study"
+                      data-id="{{ s.id }}"
+                      data-delurl="{{ url_for('delete_study', stid=s.id) }}">👁 View</button>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="3" class="empty">No studies yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+{# ═══════════════ CONNECT ═══════════════ #}
+<section class="content-section" data-section="connect">
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><h2>🔗 Connect with a Student</h2></div>
+      <p class="muted small mb1">Enter a student's ID to send a connection request.</p>
+      <form method="POST" action="{{ url_for('request_connection') }}" class="form">
+        <label>Student ID
+          <input type="text" name="target_id" required
+                 placeholder="e.g. A3F2B1C8D4E5"
+                 style="text-transform:uppercase;letter-spacing:.1em;">
+        </label>
+        <button type="submit" class="btn btn-blue">Send Request</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><h2>🆔 My Teacher ID</h2></div>
+      <p class="muted small mb1">Share this ID with your students.</p>
+      <div data-copy="{{ my_id }}"
+           title="Click to copy"
+           style="background:#151517;padding:1rem;border-radius:6px;text-align:center;
+                  font-family:monospace;font-size:1.5rem;letter-spacing:.15em;color:#7cb3ff;
+                  cursor:pointer;user-select:none;transition:background .15s;"
+           onmouseover="this.style.background='rgba(24,119,242,.15)'"
+           onmouseout="this.style.background='#151517'">
+        {{ my_id }} <span style="font-size:.9rem;opacity:.6;">📋</span>
+      </div>
+      <button type="button" class="btn btn-ghost btn-block mt1"
+              data-copy="{{ my_id }}"
+              title="Click to copy">
+        📋 Copy ID
+      </button>
+    </div>
+  </div>
+
+  {# ─── Incoming requests (students who want to connect) ─── #}
+  {% if pending_in %}
+  <div class="card mt2" style="border-left:3px solid #eab308;">
+    <div class="card-title">
+      <h2>📥 Incoming Requests ({{ pending_in|length }})</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Student</th><th>Sent</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for p in pending_in %}
+          <tr>
+            <td>
+              <b>{{ p.student.full_name }}</b>
+              <span class="muted small">@{{ p.student.username }}</span>
+            </td>
+            <td class="muted small">{{ p.conn.created_at }}</td>
+            <td>
+              <div class="row-inline">
+                <form method="POST" action="{{ url_for('approve_connection', cid=p.conn.id) }}">
+                  <button class="btn btn-green btn-sm" type="submit">✓ Approve</button>
+                </form>
+                <form method="POST" action="{{ url_for('reject_connection', cid=p.conn.id) }}">
+                  <button class="btn btn-red btn-sm" type="submit">✕ Reject</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  {# ─── Outgoing requests (teacher sent to students) ─── #}
+  {% if pending_out %}
+  <div class="card mt2">
+    <div class="card-title">
+      <h2>⏳ Sent Requests ({{ pending_out|length }})</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Student</th><th>Status</th><th>Sent</th></tr></thead>
+        <tbody>
+          {% for p in pending_out %}
+          <tr>
+            <td>
+              <b>{{ p.student.full_name }}</b>
+              <span class="muted small">@{{ p.student.username }}</span>
+            </td>
+            <td><span class="badge badge-yellow">Waiting</span></td>
+            <td class="muted small">{{ p.conn.created_at }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</section>
+
+{# ═══════════════ MY STUDENTS ═══════════════ #}
+<section class="content-section" data-section="students">
+  <div class="card">
+    <div class="card-title"><h2>My Students</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Username</th><th>Full name</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for s in students %}
+          <tr>
+            <td><b>{{ s.username }}</b></td>
+            <td>{{ s.full_name }}</td>
+            <td>
+              <a class="btn btn-blue btn-sm"
+                 href="{{ url_for('profile', username=s.username) }}">Profile</a>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="3" class="empty">No students connected yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+{# ═══════════════ STUDIES ═══════════════ #}
+<section class="content-section" data-section="studies">
+  <div class="card">
+    <div class="card-title">
+      <h2>My Studies</h2>
+      <button class="btn btn-blue btn-sm" data-action="add-study">＋ New Study</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Time</th>
+            <th style="width:110px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in studies %}
+          <tr>
+            <td>
+              <b>{{ s.title }}</b>
+              {% if s.is_locked %}
+              <span class="badge badge-red"
+                    title="{% if s.active_count > 0 %}{{ s.active_count }} student(s) currently active{% else %}May attempts na — permanent{% endif %}">
+                🔒
+                {% if s.active_count > 0 %} ({{ s.active_count }}){% endif %}
+              </span>
+            {% endif %}
+            </td>
+            <td class="muted small">
+              {{ s.published_at or s.updated_at or s.created_at or '—' }}
+            </td>
+            <td>
+              <button class="btn btn-blue btn-sm"
+                      data-action="view-study"
+                      data-id="{{ s.id }}"
+                      data-delurl="{{ url_for('delete_study', stid=s.id) }}">👁 View</button>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="3" class="empty">No studies yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+{# ═══════════════ QUIZ ATTEMPTS ═══════════════ #}
+<section class="content-section" data-section="history">
+  <div class="card">
+    <div class="card-title"><h2>Student Quiz Attempts</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Student</th><th>Study</th><th>Result</th><th>Score</th><th>Adjust</th></tr></thead>
+        <tbody>
+          {% for r in results %}
+          <tr>
+            <td><b>{{ r.student_name }}</b></td>
+            <td>{{ r.study_title }}</td>
+            <td>
+              {% if r.correct %}<span class="badge badge-green">Correct</span>
+              {% else %}<span class="badge badge-red">Wrong</span>{% endif %}
+            </td>
+            <td>{{ r.score }}{% if r.adjusted %} <span class="tag">adj</span>{% endif %}</td>
+            <td>
+              <div class="row-inline">
+                {% if r.has_manual and not r.graded %}
+                  <button class="btn btn-green btn-sm"
+                          data-result-id="{{ r.id }}"
+                          data-action="grade-result">✏️ Grade</button>
+                {% else %}
+                  <button class="btn btn-purple btn-sm"
+                          data-result-id="{{ r.id }}"
+                          data-student-name="{{ r.student_name }}"
+                          data-current-score="{{ r.score }}"
+                          data-action="edit-score">Edit</button>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="empty">No attempts yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+{# ═══════════════ ATTENDANCE ═══════════════ #}
+<section class="content-section" data-section="attendance">
+  <div class="card mb2">
+    <div class="card-title"><h2>Mark Attendance</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Student</th><th>Date</th><th>Status</th><th>Save</th></tr></thead>
+        <tbody>
+          {% for s in students %}
+          <tr>
+            <td>{{ s.username }}</td>
+            <td colspan="3">
+              <form method="POST" action="{{ url_for('mark_attendance') }}" class="row-inline">
+                <input type="hidden" name="student_id" value="{{ s.id }}">
+                <input type="date" name="date" value="{{ today }}" style="max-width:170px">
+                <select name="status" style="max-width:140px">
+                  <option>Present</option><option>Late</option><option>Absent</option>
+                </select>
+                <button class="btn btn-green btn-sm" type="submit" style="max-width:100px">Save</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="empty">No students connected yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><h2>Attendance History</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Student</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for a in attendance %}
+          <tr>
+            <td>{{ a.student_name }}</td>
+            <td>{{ a.date }}</td>
+            <td>
+              {% if a.status == 'Present' %}<span class="badge badge-green">Present</span>
+              {% elif a.status == 'Late' %}<span class="badge badge-yellow">Late</span>
+              {% else %}<span class="badge badge-red">Absent</span>{% endif %}
+            </td>
+            <td>
+              <div class="row-inline">
+                <form method="POST" action="{{ url_for('update_attendance', aid=a.id) }}" class="row-inline" style="flex:1">
+                  <select name="status" style="max-width:130px">
+                    <option {% if a.status=='Present' %}selected{% endif %}>Present</option>
+                    <option {% if a.status=='Late' %}selected{% endif %}>Late</option>
+                    <option {% if a.status=='Absent' %}selected{% endif %}>Absent</option>
+                  </select>
+                  <button class="btn btn-yellow btn-sm" type="submit" style="max-width:100px">Update</button>
+                </form>
+                <button class="btn btn-red btn-sm"
+                        data-delete-url="{{ url_for('delete_attendance', aid=a.id) }}"
+                        data-delete-msg="Delete this record?"
+                        data-action="confirm-delete">Delete</button>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="empty">No attendance yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+{# ═══════════════ ACCOUNT ═══════════════ #}
+<section class="content-section" data-section="account">
+  <div class="card" style="max-width:600px;">
+    {% if show_temp_reset %}
+    <div class="card" style="border-left:3px solid #eab308;background:rgba(234,179,8,.08);margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <span style="font-size:1.8rem;">🔑</span>
+        <div>
+          <h3 style="margin:0;color:#fde68a;font-size:1rem;">
+            Password Reset Detected
+          </h3>
+          <p class="muted small" style="margin:2px 0 0;">
+            Your password was reset by an admin. Here's your temp password:
+          </p>
+        </div>
+      </div>
+
+      <div onclick="copyTempPw()"
+           title="Click to copy"
+           style="background:#151517;padding:14px;border-radius:8px;
+                  text-align:center;font-family:'Courier New',monospace;
+                  font-size:1.4rem;letter-spacing:.15em;color:#7cb3ff;
+                  cursor:pointer;user-select:all;font-weight:700;
+                  border:1px solid rgba(24,119,242,.4);transition:all .15s;"
+           onmouseover="this.style.background='rgba(24,119,242,.15)'"
+           onmouseout="this.style.background='#151517'">
+        {{ temp_password }} <span style="font-size:.9rem;opacity:.6;">📋</span>
+      </div>
+
+      <button type="button"
+              class="btn btn-blue btn-block mt2"
+              id="copyTempBtn"
+              onclick="copyTempPw()">
+        📋 Copy Temporary Password
+      </button>
+
+      <p class="muted small" style="margin-top:12px;line-height:1.6;
+         padding-top:10px;border-top:1px dashed rgba(234,179,8,.3);">
+        📌 <b>How to change password:</b><br>
+        Use this <b>temporary password</b> as the "Current Password"
+        in the form below, then set your new password.
+      </p>
+    </div>
+    {% endif %}
+    <div class="card-title">
+      <h2>Account Settings</h2>
+      <button type="button" class="btn btn-yellow btn-sm"
+              data-open="changePasswordModal">
+        🔒 Change Password
+      </button>
+    </div>
+    <p class="muted small mb1">
+      Your ID:
+      <code data-copy="{{ my_id }}" title="Click to copy"
+            style="cursor:pointer;">{{ my_id }} 📋</code>
+    </p>
+    <p class="muted small">
+      Role: <span class="badge badge-purple">{{ user.role }}</span>
+    </p>
+    <p class="muted small">Status:
+      {% if user.status == 'active' %}
+        <span class="badge badge-green">Active</span>
+      {% elif user.status == 'pending_delete' %}
+        <span class="badge badge-yellow">Pending Deletion</span>
+      {% elif user.status == 'appealed' %}
+        <span class="badge badge-blue">Appeal Under Review</span>
+      {% else %}
+        <span class="badge badge-gray">{{ user.status }}</span>
+      {% endif %}
+    </p>
+
+    {# Show admin notice if flagged #}
+    {% if user.status == 'pending_delete' %}
+    <div class="card mt2" style="border-left:3px solid #ef4444;background:rgba(239,68,68,.08);">
+      <h3 style="color:#fca5a5;">⚠️ Account Flagged for Deletion</h3>
+      <p class="mt1"><b>Reason:</b> {{ user.delete_reason or 'No reason provided' }}</p>
+      <p class="muted small">
+        Scheduled for deletion: <b>{{ user.delete_grace_until or '—' }}</b>
+      </p>
+      <hr class="sep">
+      <h3>Submit an Appeal</h3>
+      <p class="muted small">Explain why your account should not be deleted.</p>
+      <form method="POST" action="{{ url_for('appeal_delete') }}" class="form mt1">
+        <label>Your appeal message
+          <textarea name="message" required
+                    placeholder="I believe my account was flagged by mistake because..."></textarea>
+        </label>
+        <button type="submit" class="btn btn-blue">📩 Submit Appeal</button>
+      </form>
+    </div>
+    {% elif user.status == 'appealed' %}
+    <div class="card mt2" style="border-left:3px solid #3b82f6;background:rgba(24,119,242,.06);">
+      <h3>📩 Appeal Under Review</h3>
+      <p class="muted small mt1">
+        The Super Admin is reviewing your appeal. Please wait for a response.
+      </p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<script type="application/json" id="studiesData">{{ studies|tojson }}</script>
+
+<div id="settingModal" class="modal-backdrop">
+  <div class="modal" style="max-width:540px;">
+    <div class="modal-head">
+      <h2 style="margin:0;">Activity Settings</h2>
+      <button class="icon-btn" type="button" data-action="close-setting">×</button>
+    </div>
+
+    <form id="settingForm" class="form">
+
+      <!-- Quiz Type -->
+      <label>Quiz Type *
+        <select name="type" id="setting_type" required>
+          <option value="identification">Identification</option>
+          <option value="multiple_choice">Multiple Choice</option>
+          <option value="true_false">True or False</option>
+          <option value="essay">Essay (teacher grades)</option>
+          <option value="file_upload">File Upload (teacher grades)</option>
+        </select>
+      </label>
+
+      <!-- Mode: Direct Quiz vs Study + Quiz -->
+      <label>Mode *
+        <select name="mode" id="setting_mode" required>
+          <option value="direct_quiz">Direct Quiz</option>
+          <option value="study_and_quiz">Study muna, then Quiz</option>
+        </select>
+      </label>
+
+      <!-- Study Timer (lalabas lang kung Study muna) -->
+      <div id="studyTimerRow" style="display:none;">
+        <label>Study Timer (bago mag-quiz)</label>
+        <div style="display:flex;gap:6px;">
+          <input type="number" id="study_h" placeholder="hh" min="0" value="0" style="width:70px;">
+          <input type="number" id="study_m" placeholder="mm" min="0" value="0" style="width:70px;">
+          <input type="number" id="study_s" placeholder="ss" min="0" value="0" style="width:70px;">
+        </div>
+        <input type="hidden" name="study_timer" id="setting_study_timer" value="0">
+      </div>
+
+      <!-- MC Options (lalabas lang kung multiple_choice) -->
+      <div id="mcOptionsRow" style="display:none;">
+        <label>Choices per question *
+          <select name="mc_options" id="setting_mc_options">
+            <option value="3">A, B, C (3 choices)</option>
+            <option value="4">A, B, C, D (4 choices)</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Pages -->
+      <label>Number of Pages *
+        <input type="number" name="total_pages" id="setting_pages" min="1" value="1" required>
+      </label>
+
+      <!-- Question Timer -->
+      <label>Question Timer per Page</label>
+      <div style="display:flex;gap:6px;">
+        <input type="number" id="q_h" placeholder="hh" min="0" value="0" style="width:70px;">
+        <input type="number" id="q_m" placeholder="mm" min="0" value="0" style="width:70px;">
+        <input type="number" id="q_s" placeholder="ss" min="0" value="10" style="width:70px;">
+      </div>
+      <input type="hidden" name="question_timer" id="setting_question_timer" value="10">
+
+      <label>Max Back (how many pages can go back)</label>
+      <input type="number" name="max_back" id="setting_max_back" min="0" value="0">
+
+      <label>Score per correct page</label>
+      <input type="number" name="score" id="setting_score" min="0" value="1">
+
+      <label>Penalty per wrong page</label>
+      <input type="number" name="penalty" id="setting_penalty" min="0" value="0">
+
+      <div class="modal-actions" style="justify-content:flex-end;">
+        <button type="button" class="btn btn-ghost" data-action="close-setting">Cancel</button>
+        <button type="submit" id="settingSubmitBtn" class="btn btn-blue">Next →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="viewModal" class="modal-backdrop">
+  <div class="modal">
+    <h2 id="v_title"></h2>
+    <small id="v_last"></small>
+    <hr>
+    <p><b>Type:</b> <span id="v_type"></span></p>
+    <p><b>Direction:</b> <span id="v_direction"></span></p>
+    <p><b>Study Timer :</b> <span id="v_study"></span></p>
+    <p><b>Question Timer:</b> <span id="v_question"></span></p>
+    <p><b>Max Back:</b> <span id="v_back"></span></p>
+    <p><b>Score:</b> <span id="v_score"></span></p>
+    <p><b>Penalty:</b> <span id="v_penalty"></span></p>
+    <p><b>Total Pages:</b> <span id="v_pages"></span></p>
+    <div style="margin-top: 20px;display: flex;gap: 10px;">
+      <button class="btn btn-yellow btn-sm" data-action="edit-study" data-study-id="">Edit</button>
+      <button class="btn btn-red btn-sm" data-action="confirm-delete" data-delete-url="" data-delete-msg="Delte this study">Delete</button>
+      <button class="btn btn-sm" data-action="close-view">Close</button>
+    </div>
+  </div>
+</div>
+
+{# ═══════════════ ADJUST SCORE MODAL ═══════════════ #}
+<div class="modal-backdrop" id="scoreModal">
+  <div class="modal modal-sm">
+    <div class="modal-head">
+      <h3>Adjust Score</h3>
+      <button class="icon-btn" data-close type="button">×</button>
+    </div>
+    <p class="muted small mb1">Student: <b id="scoreStudent">—</b></p>
+    <form method="POST" id="scoreForm" class="form">
+      <label>New Score <input type="number" name="score" id="scoreValue" required></label>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-purple">Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="gradeModal">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <h3>✏️ Grade Student Answers</h3>
+      <button class="icon-btn" data-close type="button">×</button>
+    </div>
+    <p class="muted small mb1">
+      Student: <b id="gradeStudent">—</b> ·
+      Study: <b id="gradeStudy">—</b>
+    </p>
+    <div id="gradeItems" style="max-height:60vh;overflow-y:auto;"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+      <button type="button" class="btn btn-green" id="gradeSaveBtn">Save Grades</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyTempPw() {
+  var txt = "{{ temp_password }}";
+  if (!txt) return;
+  function showCopied() {
+    var btn = document.getElementById('copyTempBtn');
+    if (!btn) return;
+    var orig = btn.textContent;
+    btn.textContent = '✅ Copied to clipboard!';
+    btn.style.background = 'var(--green)';
+    setTimeout(function () {
+      btn.textContent = orig;
+      btn.style.background = '';
+    }, 1800);
+  }
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(txt).then(showCopied).catch(function () {
+      fallbackCopy(txt); showCopied();
+    });
+  } else {
+    fallbackCopy(txt); showCopied();
+  }
+}
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+}
+(function () {
+  'use strict';
+
+  /* ─── Clickable overview cards ─── */
+  document.querySelectorAll('.stat.clickable').forEach(function (card) {
+    card.addEventListener('click', function () {
+      var target = card.getAttribute('data-goto');
+      var nav = document.querySelector('.adminnav[data-section="' + target + '"]');
+      if (nav) nav.click();
+    });
+  });
+
+  /* ─── Studies data ─── */
+  var studiesData = [];
+  var el = document.getElementById('studiesData');
+  if (el) {
+    try { studiesData = JSON.parse(el.textContent); }
+    catch (e) { studiesData = []; }
+  }
+
+  function findStudy(id) {
+    for (var i = 0; i < studiesData.length; i++) {
+      if (studiesData[i].id === id) return studiesData[i];
+    }
+    return null;
+  }
+
+  /* ─── Timer helper (single version) ─── */
+  function upd() {
+    var sh = +(document.getElementById('study_h')?.value || 0);
+    var sm = +(document.getElementById('study_m')?.value || 0);
+    var ss = +(document.getElementById('study_s')?.value || 0);
+    var st = document.getElementById('setting_study_timer');
+    if (st) st.value = sh * 3600 + sm * 60 + ss;
+
+    var qh = +(document.getElementById('q_h')?.value || 0);
+    var qm = +(document.getElementById('q_m')?.value || 0);
+    var qs = +(document.getElementById('q_s')?.value || 0);
+    var qt = document.getElementById('setting_question_timer');
+    if (qt) qt.value = qh * 3600 + qm * 60 + qs;
+  }
+
+  function updateModalFields() {
+    var type = document.getElementById('setting_type')?.value;
+    var mode = document.getElementById('setting_mode')?.value;
+    var stRow = document.getElementById('studyTimerRow');
+    var mcRow = document.getElementById('mcOptionsRow');
+    if (stRow) stRow.style.display = (mode === 'study_and_quiz') ? 'block' : 'none';
+    if (mcRow) mcRow.style.display = (type === 'multiple_choice') ? 'block' : 'none';
+  }
+
+  ['study_h','study_m','study_s','q_h','q_m','q_s'].forEach(function(id){
+    var e = document.getElementById(id);
+    if (e) e.addEventListener('input', upd);
+  });
+  document.getElementById('setting_type')?.addEventListener('change', updateModalFields);
+  document.getElementById('setting_mode')?.addEventListener('change', updateModalFields);
+  updateModalFields();
+  upd();
+
+  /* ─── Modal actions ─── */
+  document.addEventListener('click', function (ev) {
+    var btn = ev.target.closest('[data-action]');
+    if (!btn) return;
+    var a = btn.getAttribute('data-action');
+
+    /* ═══ ADD STUDY ═══ */
+    if (a === 'add-study') {
+      ev.preventDefault();
+
+      var form = document.getElementById('settingForm');
+      form.dataset.editId = '';
+      form.reset();
+
+      // ✅ Defaults (walang setting_title / setting_direction)
+      document.getElementById('setting_type').value = 'identification';
+      document.getElementById('setting_mode').value = 'direct_quiz';
+      document.getElementById('setting_pages').value = 1;
+
+      document.getElementById('study_h').value = 0;
+      document.getElementById('study_m').value = 0;
+      document.getElementById('study_s').value = 0;
+      document.getElementById('q_h').value = 0;
+      document.getElementById('q_m').value = 0;
+      document.getElementById('q_s').value = 10;
+
+      document.getElementById('setting_max_back').value = 0;
+      document.getElementById('setting_score').value = 1;
+      document.getElementById('setting_penalty').value = 0;
+
+      upd();
+      updateModalFields();
+      window.openModal('settingModal');
+
+    /* ═══ EDIT STUDY ═══ */
+    } else if (a === 'edit-study') {
+      ev.preventDefault();
+      window.closeModal('viewModal');
+
+      var s = findStudy(btn.getAttribute('data-study-id'));
+      if (!s) return;
+
+      // ✅ I-hide agad ang study sa student
+      fetch('/api/studies/' + s.id + '/start_edit', {
+        method: 'POST',
+        credentials: 'same-origin'
+      }).catch(function(){});
+
+      var form = document.getElementById('settingForm');
+      form.dataset.editId = s.id;
+      form.dataset.fromEdit = '1';   // ✅ Track na galing sa Edit
+
+      // ✅ Walang setting_title / setting_direction — hindi na kailangan
+      document.getElementById('setting_type').value = s.type || 'identification';
+      document.getElementById('setting_mode').value = s.mode || 'direct_quiz';
+      document.getElementById('setting_pages').value = s.total_pages || 1;
+
+      document.getElementById('study_h').value = (s.study_timer / 3600) | 0;
+      document.getElementById('study_m').value = ((s.study_timer % 3600) / 60) | 0;
+      document.getElementById('study_s').value = s.study_timer % 60;
+
+      document.getElementById('q_h').value = (s.question_timer / 3600) | 0;
+      document.getElementById('q_m').value = ((s.question_timer % 3600) / 60) | 0;
+      document.getElementById('q_s').value = s.question_timer % 60;
+
+      document.getElementById('setting_max_back').value = s.max_back || 0;
+      document.getElementById('setting_score').value = s.score || 0;
+      document.getElementById('setting_penalty').value = s.penalty || 0;
+
+      if (s.mc_options && document.getElementById('setting_mc_options')) {
+        document.getElementById('setting_mc_options').value = s.mc_options;
+      }
+
+      upd();
+      updateModalFields();
+
+      setTimeout(function () {
+        window.openModal('settingModal');
+      }, 100);
+
+    /* ═══ VIEW STUDY ═══ */
+    } else if (a === 'view-study') {
+      ev.preventDefault();
+      var s = findStudy(btn.getAttribute('data-id'));
+      if (!s) return;
+
+      document.getElementById('v_title').innerText = s.title || '';
+      document.getElementById('v_last').innerText = s.updated_at || '';
+      document.getElementById('v_type').innerText = s.type || '';
+      document.getElementById('v_direction').innerText = s.direction || '';
+      document.getElementById('v_study').innerText = s.study_timer || 0;
+      document.getElementById('v_question').innerText = s.question_timer || 0;
+      document.getElementById('v_back').innerText = s.max_back || 0;
+      document.getElementById('v_score').innerText = s.score || 0;
+      document.getElementById('v_penalty').innerText = s.penalty || 0;
+      document.getElementById('v_pages').innerText = s.total_pages || 0;
+
+      var editBtn = document.querySelector('#viewModal [data-action="edit-study"]');
+      var delBtn = document.querySelector('#viewModal [data-action="confirm-delete"]');
+
+      var lockNote = document.getElementById('v_lockNote');
+      var isLocked = s.is_locked || s.locked;
+
+      if (isLocked) {
+        if (editBtn) editBtn.style.display = 'none';
+
+        var msg = s.has_attempts
+          ? '🔒 Locked — may submitted attempts na'
+          : '🔒 May ' + (s.active_count || 1) + ' student(s) currently active';
+
+        if (!lockNote) {
+          lockNote = document.createElement('p');
+          lockNote.id = 'v_lockNote';
+          lockNote.className = 'badge badge-red';
+          lockNote.style.marginTop = '10px';
+          document.getElementById('v_title').parentNode.appendChild(lockNote);
+        }
+        lockNote.textContent = msg;
+        lockNote.style.display = 'inline-block';
+      } else {
+        if (editBtn) {
+          editBtn.style.display = 'inline-flex';
+          editBtn.setAttribute('data-study-id', s.id);
+        }
+        if (lockNote) lockNote.style.display = 'none';
+      }
+
+      if (delBtn) delBtn.setAttribute('data-delete-url', btn.getAttribute('data-delurl'));
+
+      window.openModal('viewModal');
+
+    /* ═══ CLOSE ═══ */
+    } else if (a === 'close-view') {
+      ev.preventDefault();
+      window.closeModal('viewModal');
+
+    } else if (a === 'close-setting') {
+      ev.preventDefault();
+      window.closeModal('settingModal');
+      var form = document.getElementById('settingForm');
+      var editId = form.dataset.editId;
+
+      // ✅ I-restore sa published kung nag-cancel (hindi nag-proceed)
+      if (editId && form.dataset.fromEdit === '1') {
+        fetch('/api/studies/' + editId + '/cancel_edit', {
+          method: 'POST',
+          credentials: 'same-origin'
+        }).catch(function(){});
+      }
+
+      form.removeAttribute('data-edit-id');
+      form.removeAttribute('data-from-edit');
+      document.getElementById('settingSubmitBtn').textContent = 'Next →';
+
+    /* ═══ EDIT SCORE ═══ */
+    } else if (a === 'edit-score') {
+      ev.preventDefault();
+      document.getElementById('scoreForm').action =
+        '/api/results/' + btn.getAttribute('data-result-id') + '/update';
+      document.getElementById('scoreStudent').textContent = btn.getAttribute('data-student-name');
+      document.getElementById('scoreValue').value = btn.getAttribute('data-current-score');
+      window.openModal('scoreModal');
+
+    /* ═══ DELETE ═══ */
+    } else if (a === 'confirm-delete') {
+      ev.preventDefault();
+      confirmAction(btn.getAttribute('data-delete-url'), btn.getAttribute('data-delete-msg'));
+    }
+  });
+
+  /* ═══ Setting form submit ═══ */
+  document.getElementById('settingForm')?.addEventListener('submit', async function(e){
+    e.preventDefault();
+    var editId = e.target.dataset.editId;
+    var formData = new FormData(e.target);
+
+    // ✅ Clear fromEdit flag — nag-proceed na si teacher
+    e.target.removeAttribute('data-from-edit');
+
+    upd();
+
+    if (editId) {
+      await fetch('/api/studies/' + editId + '/update', { method: 'POST', body: formData });
+      window.location.href = '/teacher/activity/' + editId + '/0';
+    } else {
+      var res = await fetch('/api/studies/create_draft', { method: 'POST', body: formData });
+      var data = await res.json();
+      if (data.error) { alert('❌ ' + data.error); return; }
+      window.location.href = '/teacher/activity/' + data.id + '/0';
+    }
+  });
+
+})();
+
+/* ═══════════════ GRADE MODAL ═══════════════ */
+let gradeResultId = null;
+
+document.addEventListener('click', function(ev){
+  const btn = ev.target.closest('[data-action="grade-result"]');
+  if (!btn) return;
+  ev.preventDefault();
+  const rid = btn.getAttribute('data-result-id');
+
+  fetch('/api/results/' + rid + '/grade-info')
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { alert('❌ ' + data.error); return; }
+      gradeResultId = rid;
+
+      document.getElementById('gradeStudent').textContent = data.student_name;
+      document.getElementById('gradeStudy').textContent = data.study_title;
+
+      const box = document.getElementById('gradeItems');
+      box.innerHTML = (data.details || []).map((d, i) => {
+        let answerHtml = '';
+        if (d.file && d.file.url) {
+          answerHtml = '<a href="' + d.file.url + '" target="_blank" class="btn btn-blue btn-sm">📄 Open: ' +
+                       d.file.name + '</a>';
+        } else if (d.your_answer) {
+          answerHtml = '<div style="background:#151517;padding:10px;border-radius:6px;border:1px solid var(--border);white-space:pre-wrap;">' +
+                       escapeHtml(d.your_answer) + '</div>';
+        } else {
+          answerHtml = '<span class="muted">(blank)</span>';
+        }
+        const refHtml = data.study_type === 'essay' && d.correct_answer
+          ? '<p class="small muted mt1"><b>Reference:</b> ' + escapeHtml(d.correct_answer) + '</p>'
+          : '';
+
+        const awarded = d.awarded_score != null ? d.awarded_score : '';
+        return `
+          <div class="card" style="margin-bottom:.8rem;background:var(--bg-2);">
+            <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+              <b>Q${i+1}.</b>
+              <span class="badge badge-yellow">Manual grade</span>
+            </div>
+            <p style="margin:.5rem 0;">${escapeHtml(d.question)}</p>
+            <p class="small mb1" style="margin:.3rem 0;"><b>Student's answer:</b></p>
+            ${answerHtml}
+            ${refHtml}
+            <label style="margin-top:.8rem;">Score
+              <input type="number" class="grade-input" data-idx="${i}"
+                     value="${awarded}" min="-999" max="999"
+                     style="max-width:120px;">
+            </label>
+          </div>
+        `;
+      }).join('');
+
+      window.openModal('gradeModal');
+    })
+    .catch(err => alert('Load failed: ' + err.message));
+});
+
+document.getElementById('gradeSaveBtn')?.addEventListener('click', function(){
+  if (!gradeResultId) return;
+  const inputs = document.querySelectorAll('.grade-input');
+  const scores = [];
+  inputs.forEach(inp => {
+    scores.push({
+      idx: parseInt(inp.getAttribute('data-idx')),
+      score: parseInt(inp.value) || 0
+    });
+  });
+
+  fetch('/api/results/' + gradeResultId + '/grade', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    credentials: 'same-origin',
+    body: JSON.stringify({ scores: scores })
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.ok) {
+      window.closeModal('gradeModal');
+      window.location.reload();
+    } else {
+      alert('❌ ' + (d.error || 'Failed'));
+    }
+  })
+  .catch(err => alert('Save failed: ' + err.message));
+});
+
+function escapeHtml(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+{% endblock %}
